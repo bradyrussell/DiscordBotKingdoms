@@ -1,10 +1,8 @@
-package com.bradyrussell.data.objects;
+package com.bradyrussell.data.dbobjects;
 
 import org.hibernate.Session;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.query.Query;
 
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;

@@ -1,10 +1,8 @@
-import com.bradyrussell.Main;
 import com.bradyrussell.data.DatabaseUtil;
 import com.bradyrussell.data.Migrations;
-import com.bradyrussell.data.objects.Kingdom;
-import com.bradyrussell.data.objects.Player;
+import com.bradyrussell.data.dbobjects.Kingdom;
+import com.bradyrussell.data.dbobjects.Player;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -13,9 +11,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.concurrent.ThreadLocalRandom;
 
 import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)

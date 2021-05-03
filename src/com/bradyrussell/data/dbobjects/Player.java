@@ -1,4 +1,4 @@
-package com.bradyrussell.data.objects;
+package com.bradyrussell.data.dbobjects;
 
 import org.hibernate.Session;
 import org.hibernate.annotations.CreationTimestamp;

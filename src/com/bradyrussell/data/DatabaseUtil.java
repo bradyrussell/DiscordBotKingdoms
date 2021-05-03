@@ -1,7 +1,7 @@
 package com.bradyrussell.data;
 
-import com.bradyrussell.data.objects.Kingdom;
-import com.bradyrussell.data.objects.Player;
+import com.bradyrussell.data.dbobjects.Kingdom;
+import com.bradyrussell.data.dbobjects.Player;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
  
