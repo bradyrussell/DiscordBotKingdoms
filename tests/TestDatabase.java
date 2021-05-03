@@ -46,6 +46,7 @@ public class TestDatabase {
     public void testKingdom() {
         try (Connection conn = DriverManager.getConnection(Main.TestDatabaseConnectionString)) {
             if (conn != null) {
+                System.out.println(conn.getMetaData().getDriverName());
 
                 Kingdom kingdom = new Kingdom();
                 kingdom.name = "My Test Kingdom";
