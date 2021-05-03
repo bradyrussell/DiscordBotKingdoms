@@ -21,8 +21,7 @@ public class DatabaseUtil {
                     .setProperty("hibernate.connection.url", ConnectionString)
                     .setProperty("hibernate.dialect", "org.sqlite.hibernate.dialect.SQLiteDialect")
                     .setProperty("hibernate.show_sql", "true")
-                    .setProperty("hibernate.hdm2ddl.auto", "validate").configure();
-            //configuration;
+                    .setProperty("hibernate.hdm2ddl.auto", "validate");
 
             return configuration.buildSessionFactory();
         } catch (Exception e) {
