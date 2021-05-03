@@ -5,7 +5,7 @@ import com.bradyrussell.data.MigrationBase;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class MigrationKingdom extends MigrationBase {
+public class MigrationKingdoms extends MigrationBase {
     @Override
     public void performMigration(Connection connection) throws SQLException {
         connection.prepareStatement("CREATE TABLE kingdoms (" +

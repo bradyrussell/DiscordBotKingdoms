@@ -42,5 +42,7 @@
     <orderEntry type="library" name="org.hibernate:hibernate-core:5.2.12.Final" level="project" />
     <orderEntry type="library" name="com.github.gwenn:sqlite-dialect:0.1.2" level="project" />
     <orderEntry type="library" name="com.google.code.gson:gson:2.8.6" level="project" />
+    <orderEntry type="library" name="javax.xml.bind:jaxb-api:2.3.1" level="project" />
+    <orderEntry type="library" name="org.javassist:javassist:3.27.0-GA" level="project" />
   </component>
 </module>

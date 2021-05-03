@@ -1,7 +1,9 @@
 package com.bradyrussell.data;
 
-import com.bradyrussell.data.migrations.MigrationKingdom;
+import com.bradyrussell.data.migrations.MigrationBuildings;
+import com.bradyrussell.data.migrations.MigrationKingdoms;
 import com.bradyrussell.data.migrations.MigrationPlayers;
+import com.bradyrussell.data.migrations.MigrationUnits;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,9 +13,11 @@ import java.util.Arrays;
 
 public class Migrations {
     public static void run(Connection connection) {
-        ArrayList<MigrationBase> Migrations = new ArrayList<>(Arrays.asList(
+        ArrayList<MigrationBase> Migrations = new ArrayList<MigrationBase>(Arrays.asList(
                 new MigrationPlayers(),
-                new MigrationKingdom()
+                new MigrationKingdoms(),
+                new MigrationUnits(),
+                new MigrationBuildings()
         ));
 
         System.out.println("Running migrations...");

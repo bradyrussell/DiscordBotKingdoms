@@ -54,7 +54,7 @@ public class TestDatabase {
 
             Player player = Player.get(session, 1234);
 
-            System.out.println(player.joined.toLocaleString());
+            assertEquals(player.userid, 1234);
 
             session.close();
         } catch (Exception e){
@@ -68,12 +68,17 @@ public class TestDatabase {
             Session session = DatabaseUtil.getTestSessionFactory().openSession();
             session.beginTransaction();
 
-            Kingdom kingdom = new Kingdom(1234,"Testland");
+            Player owner = Player.get(session, 1234);
+
+            assertEquals(owner.userid,1234);
+
+            Kingdom kingdom = new Kingdom(owner,"Testland");
 
             session.persist(kingdom);
             session.getTransaction().commit();
-
             session.close();
+
+            assertEquals(kingdom.owner.userid,1234);
         } catch (Exception e){
             fail(e);
         }
@@ -84,12 +89,15 @@ public class TestDatabase {
         try{
             Session session = DatabaseUtil.getTestSessionFactory().openSession();
 
-            Kingdom kingdom = Kingdom.getByOwner(session, 1234);
+            Kingdom kingdom = Kingdom.get(session, 1);
 
-            System.out.println(kingdom.name);
+            assertNotNull(kingdom);
+            assertNotNull(kingdom.owner);
+            assertEquals(kingdom.owner.userid, 1234);
 
             session.close();
         } catch (Exception e){
+            e.printStackTrace();
             fail(e);
         }
     }
