@@ -5,15 +5,6 @@
 
 <hibernate-configuration>
     <session-factory>
-        <property name="hibernate.show_sql">false</property>
-        <property name="hibernate.format_sql">true</property>
-        <property name="use_sql_comments">false</property>
 
-        <property name="hibernate.dialect">org.sqlite.hibernate.dialect.SQLiteDialect</property>
-        <property name="hibernate.connection.url">jdbc:sqlite:kingdom_test</property>
-
-        <!-- add classes to map from here -->
-        <mapping class="com.bradyrussell.data.objects.Player" />
-        <mapping class="com.bradyrussell.data.objects.Kingdom" />
     </session-factory>
 </hibernate-configuration>

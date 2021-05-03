@@ -9,8 +9,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static com.bradyrussell.Main.DatabaseConnectionString;
-
 public class Migrations {
     public static void run(Connection connection) {
         ArrayList<MigrationBase> Migrations = new ArrayList<>(Arrays.asList(
@@ -36,7 +34,7 @@ public class Migrations {
     }
 
     public static void main(String[] args) {
-        try (Connection conn = DriverManager.getConnection(DatabaseConnectionString)) {
+        try (Connection conn = DriverManager.getConnection(DatabaseUtil.DatabaseConnectionString)) {
             if (conn != null) {
                 run(conn);
             }

@@ -1,55 +1,34 @@
 package com.bradyrussell.data.objects;
 
-import com.bradyrussell.data.SqlObjectBase;
+import org.hibernate.Session;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.sql.*;
 
-public class Player extends SqlObjectBase {
+@Entity @Table(name="players")
+public class Player {
+    public Player() {
+    }
+
+    public Player(long userid) {
+        this.userid = userid;
+    }
+
+    public static Player get(Session session, long userid){
+        return session.get(Player.class, userid);
+    }
+
+    @Id @Column(name="userid")
     public long userid;
-    public long joined;
 
-    public static Player get(Connection connection, long userid) throws SQLException {
-        Player player = new Player();
-        player.userid = userid;
-        if(player.refresh(connection)) {
-            return player;
-        }
-        return null;
-    }
+    @CreationTimestamp @Column(name="joined")
+    public Timestamp joined;
 
-    @Override
-    public boolean create(Connection connection) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("INSERT INTO players (userid) VALUES (?)");
-        statement.setLong(1, userid);
-        return statement.executeUpdate() == 1;
-    }
-
-    @Override
-    public boolean update(Connection connection) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("UPDATE players SET /*joined=?*/ WHERE userid=?");
-        //statement.setLong(2, userid);
-        return statement.executeUpdate() == 1;
-    }
-
-    @Override
-    public boolean refresh(Connection connection) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("SELECT * FROM players WHERE userid = ?");
-        statement.setLong(1, userid);
-        ResultSet resultSet = statement.executeQuery();
-
-        if(resultSet.next()) {
-            //skip userid
-            joined = resultSet.getLong("joined");
-            resultSet.close();
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean delete(Connection connection) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("DELETE FROM players WHERE userid=?");
-        statement.setLong(1, userid);
-        return statement.executeUpdate() == 1;
-    }
+    @UpdateTimestamp @Column(name = "updated")
+    public Timestamp updated;
 }

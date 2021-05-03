@@ -12,8 +12,10 @@ public class MigrationKingdom extends MigrationBase {
                 "id integer NOT NULL," +
                 "owner integer NOT NULL," +
                 "name text NOT NULL," +
-                "level integer NOT NULL DEFAULT 1," +
-                "created integer NOT NULL DEFAULT (strftime('%s', 'now'))," +
+                "level integer NOT NULL," +
+                "population integer NOT NULL," +
+                "created integer NOT NULL," +
+                "updated integer NOT NULL, " +
                 "PRIMARY KEY (id))"
         ).execute();
     }
