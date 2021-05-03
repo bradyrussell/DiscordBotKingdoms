@@ -11,6 +11,7 @@ public class MigrationUnits extends MigrationBase {
         connection.prepareStatement("CREATE TABLE units (" +
                 "id integer NOT NULL," +
                 "kingdom integer NOT NULL," +
+                "type text NOT NULL," +
                 "level integer NOT NULL," +
                 "health integer NOT NULL," +
                 "created integer NOT NULL," +

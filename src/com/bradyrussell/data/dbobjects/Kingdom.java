@@ -59,4 +59,7 @@ public class Kingdom {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "kingdom")
     public List<Unit> units;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "kingdom")
+    public List<Building> buildings;
 }
