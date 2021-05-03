@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="jda-utilities-menu-3.0.5">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../DiscordBotTet/jda-utilities-menu-3.0.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../DiscordBotTet/jda-utilities-commons-3.0.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../DiscordBotTet/jda-utilities-command-3.0.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../DiscordBotTet/JDA-4.2.1_253-withDependencies-min.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
