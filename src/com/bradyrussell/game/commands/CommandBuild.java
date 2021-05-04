@@ -12,11 +12,11 @@ import org.hibernate.Session;
 
 import java.util.concurrent.TimeUnit;
 
-public class CommandCreateKingdom extends Command {
+public class CommandBuild extends Command {
     private final EventWaiter eventWaiter;
 
-    public CommandCreateKingdom(EventWaiter eventWaiter) {
-        this.name = "create";
+    public CommandBuild(EventWaiter eventWaiter) {
+        this.name = "build";
         this.eventWaiter = eventWaiter;
     }
 
@@ -33,7 +33,7 @@ public class CommandCreateKingdom extends Command {
 
                     new ButtonMenu.Builder()
                             .setUsers(commandEvent.getAuthor())
-                            .setChoices(Emojis.CONFIRM,Emojis.CANCEL)
+                            .setChoices(Emojis.CONFIRM, Emojis.CANCEL)
                             .setText("Are you sure you want to name your kingdom this?")
                             .setDescription(commandEvent.getArgs())
                             .setAction(reactionEmote -> {

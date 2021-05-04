@@ -20,6 +20,8 @@ public class Kingdom {
         this.owner = owner;
         this.name = name;
         this.level = 1;
+        this.population = 1;
+        this.money = 500;
     }
 
     public static Kingdom get(Session session, long id){
@@ -44,15 +46,6 @@ public class Kingdom {
         return session.createQuery(query).getSingleResult();
     }
 
-    public static Kingdom deleteBuildingsAndUnits(Session session, long owner) {
-        CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<Kingdom> query = builder.createQuery(Kingdom.class);
-        Root<Kingdom> root = query.from(Kingdom.class);
-        query.select(root).where(builder.equal(root.get("owner"), owner));
-
-        return session.createQuery(query).getSingleResult();
-    }
-
     @Id @Column(name = "id")  @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long id;
 
@@ -65,6 +58,9 @@ public class Kingdom {
 
     @Column(name = "level")
     public int level;
+
+    @Column(name = "money")
+    public long money;
 
     @Column(name = "population")
     public int population;

@@ -1,6 +1,7 @@
 package com.bradyrussell.game.commands;
 
 import com.bradyrussell.data.DatabaseUtil;
+import com.bradyrussell.data.Emojis;
 import com.bradyrussell.data.dbobjects.Kingdom;
 import com.bradyrussell.data.dbobjects.Player;
 import com.jagrosh.jdautilities.command.Command;
@@ -12,9 +13,6 @@ import org.hibernate.Session;
 import java.util.concurrent.TimeUnit;
 
 public class CommandSurrenderKingdom extends Command {
-    private final String CANCEL = "\u274C"; // ❌
-    private final String CONFIRM = "\u2611"; // ☑
-
     private final EventWaiter eventWaiter;
 
     public CommandSurrenderKingdom(EventWaiter eventWaiter) {
@@ -36,11 +34,11 @@ public class CommandSurrenderKingdom extends Command {
                     if(commandEvent.getArgs().trim().equals(player.kingdom.name)) {
                         new ButtonMenu.Builder()
                                 .setUsers(commandEvent.getAuthor())
-                                .setChoices("✅", "❌")
+                                .setChoices(Emojis.CONFIRM, Emojis.CANCEL)
                                 .setText("Are you sure you want to surrender your kingdom? This CANNOT be undone.")
                                 .setDescription(commandEvent.getArgs())
                                 .setAction(reactionEmote -> {
-                                    if(reactionEmote.getName().equals("✅")) {
+                                    if(reactionEmote.getName().equals(Emojis.CONFIRM)) {
                                         Session session2 = DatabaseUtil.getProductionSessionFactory().openSession();
                                         session2.beginTransaction();
 
@@ -58,15 +56,15 @@ public class CommandSurrenderKingdom extends Command {
                                     message.clearReactions().queue();
                                 }).setEventWaiter(eventWaiter).setTimeout(30, TimeUnit.SECONDS).build().display(commandEvent.getChannel());
                     } else {
-                        commandEvent.getMessage().addReaction("❌").queue();
+                        commandEvent.getMessage().addReaction(Emojis.CANCEL).queue();
                         commandEvent.reply("You entered "+commandEvent.getArgs().trim()+" but were supposed to enter "+player.kingdom.name+" !");
                     }
                 } else {
-                    commandEvent.getMessage().addReaction("❌").queue();
+                    commandEvent.getMessage().addReaction(Emojis.CANCEL).queue();
                     commandEvent.reply("For verification please specify the name of your kingdom: surrender "+player.kingdom.name+" !");
                 }
             } else {
-                commandEvent.getMessage().addReaction("❌").queue();
+                commandEvent.getMessage().addReaction(Emojis.CANCEL).queue();
                 commandEvent.reply("Sorry, but you must have a kingdom before you can surrender it!");
             }
         } catch (Exception e) {
