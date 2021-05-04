@@ -9,6 +9,7 @@ import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
+import okhttp3.OkHttpClient;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -57,6 +58,9 @@ public class Main {
 
             if(commands[0].equalsIgnoreCase("quit")) {
                 System.out.println("Shutting down...");
+                OkHttpClient client = jda.getHttpClient();
+                client.connectionPool().evictAll();
+                client.dispatcher().executorService().shutdown();
                 jda.shutdown();
                 System.out.println("Shut down!");
                 break;

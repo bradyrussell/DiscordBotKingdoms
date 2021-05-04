@@ -10,7 +10,7 @@ public class MigrationUnits extends MigrationBase {
     public void performMigration(Connection connection) throws SQLException {
         connection.prepareStatement("CREATE TABLE units (" +
                 "id integer NOT NULL," +
-                "kingdom integer NOT NULL," +
+                "kingdom integer NOT NULL REFERENCES kingdoms(id) ON DELETE CASCADE ," +
                 "type text NOT NULL," +
                 "level integer NOT NULL," +
                 "health integer NOT NULL," +

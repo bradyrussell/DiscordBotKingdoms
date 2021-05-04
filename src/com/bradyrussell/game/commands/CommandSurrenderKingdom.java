@@ -25,7 +25,7 @@ public class CommandSurrenderKingdom extends Command {
     @Override
     protected void execute(CommandEvent commandEvent) {
         if (commandEvent.getAuthor().isBot()) return;
-        Session session = DatabaseUtil.getTestSessionFactory().openSession();
+        Session session = DatabaseUtil.getProductionSessionFactory().openSession();
 
         try {
             Player player = Player.get(session, commandEvent.getAuthor().getIdLong());
@@ -41,7 +41,7 @@ public class CommandSurrenderKingdom extends Command {
                                 .setDescription(commandEvent.getArgs())
                                 .setAction(reactionEmote -> {
                                     if(reactionEmote.getName().equals("✅")) {
-                                        Session session2 = DatabaseUtil.getTestSessionFactory().openSession();
+                                        Session session2 = DatabaseUtil.getProductionSessionFactory().openSession();
                                         session2.beginTransaction();
 
                                         session2.delete(player.kingdom);
@@ -49,7 +49,7 @@ public class CommandSurrenderKingdom extends Command {
                                         session2.getTransaction().commit();
                                         session2.close();
 
-                                        commandEvent.reply("You have surrendered your kingdom!");
+                                        commandEvent.getMessage().reply("You have surrendered your kingdom!").queue();
                                     } else {
                                         commandEvent.getMessage().reply("Canceled surrender!").queue();
                                     }

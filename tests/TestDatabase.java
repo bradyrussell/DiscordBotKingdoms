@@ -10,6 +10,9 @@ import org.apache.log4j.BasicConfigurator;
 import org.hibernate.Session;
 import org.junit.jupiter.api.*;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -22,6 +25,8 @@ public class TestDatabase {
     private static final int WriteOrder = 1;
     private static final int PopulateOrder = 2;
     private static final int ReadOrder = 3;
+    private static final int DeleteOrder = 4;
+    private static final int AfterDeleteOrder = 5;
 
     @BeforeAll
     static void setup(){
@@ -161,6 +166,56 @@ public class TestDatabase {
             assertTrue(kingdom.buildings.size() > 0);
 
             assertEquals(kingdom.buildings.get(0).type,BuildingTypes.ThroneRoom);
+
+            assertTrue(Kingdom.getCount(session) > 0);
+
+            session.close();
+        } catch (Exception e){
+            e.printStackTrace();
+            fail(e);
+        }
+    }
+
+    @Test @Order(DeleteOrder)
+    public void testDeleteKingdom() {
+        try{
+            Session session = DatabaseUtil.getTestSessionFactory().openSession();
+
+            Kingdom kingdom = Kingdom.getByOwnerId(session, 1234);
+
+            session.beginTransaction();
+            session.delete(kingdom);
+            session.getTransaction().commit();
+            session.close();
+        } catch (Exception e){
+            e.printStackTrace();
+            fail(e);
+        }
+    }
+
+    @Test @Order(AfterDeleteOrder)
+    public void testAfterDeleteKingdom() {
+        try{
+            Session session = DatabaseUtil.getTestSessionFactory().openSession();
+
+            // no kingdoms exist
+            assertEquals(0, Kingdom.getCount(session));
+
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<Long> query = builder.createQuery(Long.class);
+            Root<Building> root = query.from(Building.class);
+            query.select(builder.count(root));
+
+            // no buildings exist
+            assertEquals(0, (long) session.createQuery(query).getSingleResult());
+
+            CriteriaBuilder builder2 = session.getCriteriaBuilder();
+            CriteriaQuery<Long> query2 = builder2.createQuery(Long.class);
+            Root<Unit> root2 = query2.from(Unit.class);
+            query2.select(builder2.count(root2));
+
+            // no units exist
+            assertEquals(0, (long) session.createQuery(query2).getSingleResult());
 
             session.close();
         } catch (Exception e){

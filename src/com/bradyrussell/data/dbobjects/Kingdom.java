@@ -44,6 +44,15 @@ public class Kingdom {
         return session.createQuery(query).getSingleResult();
     }
 
+    public static Kingdom deleteBuildingsAndUnits(Session session, long owner) {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Kingdom> query = builder.createQuery(Kingdom.class);
+        Root<Kingdom> root = query.from(Kingdom.class);
+        query.select(root).where(builder.equal(root.get("owner"), owner));
+
+        return session.createQuery(query).getSingleResult();
+    }
+
     @Id @Column(name = "id")  @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long id;
 

@@ -25,7 +25,7 @@ public class CommandCreateKingdom extends Command {
     @Override
     protected void execute(CommandEvent commandEvent) {
         if (commandEvent.getAuthor().isBot()) return;
-        Session session = DatabaseUtil.getTestSessionFactory().openSession();
+        Session session = DatabaseUtil.getProductionSessionFactory().openSession();
 
         try {
             Player player = Player.get(session, commandEvent.getAuthor().getIdLong());
@@ -40,7 +40,7 @@ public class CommandCreateKingdom extends Command {
                             .setDescription(commandEvent.getArgs())
                             .setAction(reactionEmote -> {
                                 if(reactionEmote.getName().equals("✅")) {
-                                    Session session2 = DatabaseUtil.getTestSessionFactory().openSession();
+                                    Session session2 = DatabaseUtil.getProductionSessionFactory().openSession();
                                     session2.beginTransaction();
 
                                     Kingdom kingdom = new Kingdom(player, commandEvent.getArgs().trim());
@@ -49,7 +49,7 @@ public class CommandCreateKingdom extends Command {
                                     session2.getTransaction().commit();
                                     session2.close();
 
-                                    commandEvent.reply("Your kingdom has been created!");
+                                    commandEvent.getMessage().reply("Your kingdom has been created!").queue();
                                 } else {
                                     commandEvent.getMessage().reply("Canceled kingdom creation!").queue();
                                 }
