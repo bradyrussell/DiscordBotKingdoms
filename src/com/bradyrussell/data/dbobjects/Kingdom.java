@@ -1,5 +1,7 @@
 package com.bradyrussell.data.dbobjects;
 
+import com.bradyrussell.data.BuildingTypes;
+import com.bradyrussell.data.UnitTypes;
 import org.hibernate.Session;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -44,6 +46,42 @@ public class Kingdom {
         query.select(builder.count(root));
 
         return session.createQuery(query).getSingleResult();
+    }
+
+    public long getBuildingCountByType(Session session, BuildingTypes type) {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Long> query = builder.createQuery(Long.class);
+        Root<Building> root = query.from(Building.class);
+        query.select(builder.count(root)).where(builder.equal(root.get("type"), type)).where(builder.equal(root.get("kingdom"), id));
+
+        return session.createQuery(query).getSingleResult();
+    }
+
+    public long getUnitCountByType(Session session, UnitTypes type) {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Long> query = builder.createQuery(Long.class);
+        Root<Unit> root = query.from(Unit.class);
+        query.select(builder.count(root)).where(builder.equal(root.get("type"), type)).where(builder.equal(root.get("kingdom"), id));
+
+        return session.createQuery(query).getSingleResult();
+    }
+
+    public List<Building> getBuildingsByType(Session session, BuildingTypes type) {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Building> query = builder.createQuery(Building.class);
+        Root<Building> root = query.from(Building.class);
+        query.select(root).where(builder.equal(root.get("type"), type)).where(builder.equal(root.get("kingdom"), id));
+
+        return session.createQuery(query).getResultList();
+    }
+
+    public List<Unit> getUnitsByType(Session session, UnitTypes type) {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Unit> query = builder.createQuery(Unit.class);
+        Root<Unit> root = query.from(Unit.class);
+        query.select(root).where(builder.equal(root.get("type"), type)).where(builder.equal(root.get("kingdom"), id));
+
+        return session.createQuery(query).getResultList();
     }
 
     @Id @Column(name = "id")  @GeneratedValue(strategy = GenerationType.IDENTITY)

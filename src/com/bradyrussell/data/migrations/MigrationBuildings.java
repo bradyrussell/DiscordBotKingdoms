@@ -14,6 +14,7 @@ public class MigrationBuildings extends MigrationBase {
                 "type text NOT NULL," +
                 "level integer NOT NULL," +
                 "health integer NOT NULL," +
+                "ready integer NOT NULL," +
                 "created integer NOT NULL," +
                 "updated integer NOT NULL, " +
                 "PRIMARY KEY (id))"

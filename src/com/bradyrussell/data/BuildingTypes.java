@@ -12,7 +12,7 @@ public enum BuildingTypes {
     Gatehouse("Gatehouse", 1, Integer.MAX_VALUE, 100, 1, 25, Map.of(BuildingTypes.Castle, 1), null, "Well we can't just let anyone in!"),
     CastleWalls("Castle Walls", 1, Integer.MAX_VALUE, 100, 1, 25, Map.of(BuildingTypes.Castle, 1), null, "Walls are an important part of any castle."),
     Moat(null, 1, Integer.MAX_VALUE, 100, 1, 50, Map.of(BuildingTypes.Castle, 5), null, "Who knows what lurks in that water..."),
-    KingdomWalls("Castle Walls", 1, Integer.MAX_VALUE, 100, 1, 100, Map.of(BuildingTypes.Castle, 10), null, "A great wall around the entire kingdom."),
+    KingdomWalls("Kingdom Walls", 1, Integer.MAX_VALUE, 100, 1, 100, Map.of(BuildingTypes.Castle, 10), null, "A great wall around the entire kingdom."),
 
     //Unit Production
     Barracks(null, 1, Integer.MAX_VALUE, 100, 1, 5, Map.of(BuildingTypes.ThroneRoom, 1), Map.of(UnitTypes.Swordsman, 1), ""),
@@ -42,6 +42,32 @@ public enum BuildingTypes {
         Prerequisites = prerequisites;
         CanTrainUnitAtLevel = canTrainUnitAtLevel;
         Description = description;
+    }
+
+    public static BuildingTypes search(String search){
+        for (BuildingTypes value : BuildingTypes.values()) {
+            if(value.name().equalsIgnoreCase(search) || value.DisplayName.equalsIgnoreCase(search)) return value;
+        }
+        return null;
+    }
+
+    public String prerequisitesString() {
+        if(this.Prerequisites == null) return "None";
+        StringBuilder sb = new StringBuilder();
+
+        boolean bFirst = true;
+
+
+
+        for (Map.Entry<BuildingTypes, Integer> entry : this.Prerequisites.entrySet()) {
+            if(!bFirst) {
+                sb.append(", ");
+            } else {
+                bFirst = false;
+            }
+            sb.append(entry.getKey().DisplayName).append(" Level ").append(entry.getValue());
+        }
+        return sb.toString();
     }
 
     public final String DisplayName;

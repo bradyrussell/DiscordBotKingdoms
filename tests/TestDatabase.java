@@ -149,6 +149,21 @@ public class TestDatabase {
     }
 
     @Test @Order(ReadOrder)
+    public void testCheckUnit() {
+        try{
+            Session session = DatabaseUtil.getTestSessionFactory().openSession();
+
+            Player player = Player.get(session, 1234);
+
+            System.out.println(player.kingdom.units.get(0).ready.toLocaleString());
+
+            session.close();
+        } catch (Exception e){
+            fail(e);
+        }
+    }
+
+    @Test @Order(ReadOrder)
     public void testCheckKingdom() {
         try{
             Session session = DatabaseUtil.getTestSessionFactory().openSession();
@@ -160,11 +175,13 @@ public class TestDatabase {
             assertEquals(kingdom.owner.userid, 1234);
 
             assertTrue(kingdom.units.size() > 0);
-
+            assertTrue(kingdom.getUnitsByType(session,UnitTypes.Wizard).size() > 0);
+            assertTrue(kingdom.getUnitCountByType(session,UnitTypes.Wizard) > 0);
             assertEquals(kingdom.units.get(0).type,UnitTypes.Wizard);
 
             assertTrue(kingdom.buildings.size() > 0);
-
+            assertTrue(kingdom.getBuildingsByType(session,BuildingTypes.ThroneRoom).size() > 0);
+            assertTrue(kingdom.getBuildingCountByType(session,BuildingTypes.ThroneRoom) > 0);
             assertEquals(kingdom.buildings.get(0).type,BuildingTypes.ThroneRoom);
 
             assertTrue(Kingdom.getCount(session) > 0);

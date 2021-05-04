@@ -1358,136 +1358,169 @@
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="499" parent="170" name="created">
+    <column id="499" parent="170" name="ready">
       <Position>6</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="500" parent="170" name="updated">
+    <column id="500" parent="170" name="created">
       <Position>7</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <key id="501" parent="170">
+    <column id="501" parent="170" name="updated">
+      <Position>8</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="502" parent="170">
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="502" parent="171" name="id">
+    <foreign-key id="503" parent="170">
+      <ColNames>kingdom</ColNames>
+      <RefTableName>kingdoms</RefTableName>
+      <RefColNames>id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="504" parent="171" name="id">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="503" parent="171" name="owner">
+    <column id="505" parent="171" name="owner">
       <Position>2</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="504" parent="171" name="name">
+    <column id="506" parent="171" name="name">
       <Position>3</Position>
       <DataType>text|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="505" parent="171" name="level">
+    <column id="507" parent="171" name="level">
       <Position>4</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="506" parent="171" name="population">
+    <column id="508" parent="171" name="money">
       <Position>5</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="507" parent="171" name="created">
+    <column id="509" parent="171" name="population">
       <Position>6</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="508" parent="171" name="updated">
+    <column id="510" parent="171" name="created">
       <Position>7</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <key id="509" parent="171">
+    <column id="511" parent="171" name="updated">
+      <Position>8</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="512" parent="171">
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="510" parent="172" name="userid">
+    <foreign-key id="513" parent="171">
+      <ColNames>owner</ColNames>
+      <RefTableName>players</RefTableName>
+      <RefColNames>userid</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="514" parent="172" name="userid">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="511" parent="172" name="joined">
+    <column id="515" parent="172" name="joined">
       <Position>2</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="512" parent="172" name="updated">
+    <column id="516" parent="172" name="updated">
       <Position>3</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <key id="513" parent="172">
+    <key id="517" parent="172">
       <ColNames>userid</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="514" parent="173" name="type">
+    <column id="518" parent="173" name="type">
       <Position>1</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="515" parent="173" name="name">
+    <column id="519" parent="173" name="name">
       <Position>2</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="516" parent="173" name="tbl_name">
+    <column id="520" parent="173" name="tbl_name">
       <Position>3</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="517" parent="173" name="rootpage">
+    <column id="521" parent="173" name="rootpage">
       <Position>4</Position>
       <DataType>int|0s</DataType>
     </column>
-    <column id="518" parent="173" name="sql">
+    <column id="522" parent="173" name="sql">
       <Position>5</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="519" parent="174" name="id">
+    <column id="523" parent="174" name="id">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="520" parent="174" name="kingdom">
+    <column id="524" parent="174" name="kingdom">
       <Position>2</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="521" parent="174" name="type">
+    <column id="525" parent="174" name="type">
       <Position>3</Position>
       <DataType>text|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="522" parent="174" name="level">
+    <column id="526" parent="174" name="level">
       <Position>4</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="523" parent="174" name="health">
+    <column id="527" parent="174" name="health">
       <Position>5</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="524" parent="174" name="created">
+    <column id="528" parent="174" name="ready">
       <Position>6</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="525" parent="174" name="updated">
+    <column id="529" parent="174" name="created">
       <Position>7</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <key id="526" parent="174">
+    <column id="530" parent="174" name="updated">
+      <Position>8</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="531" parent="174">
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
+    <foreign-key id="532" parent="174">
+      <ColNames>kingdom</ColNames>
+      <RefTableName>kingdoms</RefTableName>
+      <RefColNames>id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
   </database-model>
 </dataSource>

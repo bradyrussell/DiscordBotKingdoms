@@ -8,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.Instant;
 
 @Entity @Table(name="units")
 public class Unit {
@@ -23,6 +24,7 @@ public class Unit {
         this.type = type;
         this.level = 1;
         this.health = type.MaxHealth;
+        this.ready = Timestamp.from(Instant.now().plusSeconds(60));
     }
 
     @Id
@@ -37,6 +39,9 @@ public class Unit {
 
     @Column(name = "health")
     public int health;
+
+    @Column(name = "ready")
+    public Timestamp ready;
 
     @CreationTimestamp
     @Column(name = "created")

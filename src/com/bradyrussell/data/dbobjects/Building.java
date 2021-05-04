@@ -7,6 +7,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.Instant;
 
 @Entity @Table(name="buildings")
 public class Building {
@@ -22,6 +23,7 @@ public class Building {
         this.type = type;
         this.level = 1;
         this.health = type.MaxHealth;
+        this.ready = Timestamp.from(Instant.now().plusSeconds(60));
     }
 
     @Id @Column(name = "id")  @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,6 +37,9 @@ public class Building {
 
     @Column(name = "health")
     public int health;
+
+    @Column(name = "ready")
+    public Timestamp ready;
 
     @CreationTimestamp @Column(name = "created")
     public Timestamp created;
