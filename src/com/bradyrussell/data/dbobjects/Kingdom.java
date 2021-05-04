@@ -35,6 +35,15 @@ public class Kingdom {
         return session.createQuery(query).getSingleResult();
     }
 
+    public static long getCount(Session session) {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Long> query = builder.createQuery(Long.class);
+        Root<Kingdom> root = query.from(Kingdom.class);
+        query.select(builder.count(root));
+
+        return session.createQuery(query).getSingleResult();
+    }
+
     @Id @Column(name = "id")  @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long id;
 

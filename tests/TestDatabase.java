@@ -6,15 +6,14 @@ import com.bradyrussell.data.dbobjects.Building;
 import com.bradyrussell.data.dbobjects.Kingdom;
 import com.bradyrussell.data.dbobjects.Player;
 import com.bradyrussell.data.dbobjects.Unit;
+import org.apache.log4j.BasicConfigurator;
 import org.hibernate.Session;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -23,6 +22,11 @@ public class TestDatabase {
     private static final int WriteOrder = 1;
     private static final int PopulateOrder = 2;
     private static final int ReadOrder = 3;
+
+    @BeforeAll
+    static void setup(){
+        BasicConfigurator.configure();
+    }
 
     @Test @Order(MigrateOrder)
     public void testMigrations() {
@@ -46,6 +50,8 @@ public class TestDatabase {
             session.persist(player);
             session.getTransaction().commit();
 
+            assertNull(player.kingdom);
+
             session.close();
         } catch (Exception e){
             fail(e);
@@ -60,6 +66,22 @@ public class TestDatabase {
             Player player = Player.get(session, 1234);
 
             assertEquals(player.userid, 1234);
+
+            session.close();
+        } catch (Exception e){
+            fail(e);
+        }
+    }
+
+    @Test @Order(ReadOrder)
+    public void testCheckNewPlayer() {
+        try{
+            Session session = DatabaseUtil.getTestSessionFactory().openSession();
+
+            int userid = ThreadLocalRandom.current().nextInt();
+            Player player = Player.get(session, userid);
+
+            assertEquals(player.userid, userid);
 
             session.close();
         } catch (Exception e){

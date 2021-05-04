@@ -16,8 +16,18 @@ public class Player {
         this.userid = userid;
     }
 
+    //creates if one does not exist
     public static Player get(Session session, long userid){
-        return session.get(Player.class, userid);
+        Player player = session.get(Player.class, userid);
+        if(player == null) {
+            session.beginTransaction();
+
+            player = new Player(userid);
+
+            session.persist(player);
+            session.getTransaction().commit();
+        }
+        return player;
     }
 
     @Id @Column(name="userid")
