@@ -18,6 +18,7 @@ public class CommandCreateKingdom extends Command {
     public CommandCreateKingdom(EventWaiter eventWaiter) {
         this.name = "create";
         this.eventWaiter = eventWaiter;
+        this.help = "Create a new kingdom, if you do not have one already.";
     }
 
     @Override

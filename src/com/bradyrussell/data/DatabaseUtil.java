@@ -1,9 +1,6 @@
 package com.bradyrussell.data;
 
-import com.bradyrussell.data.dbobjects.Building;
-import com.bradyrussell.data.dbobjects.Kingdom;
-import com.bradyrussell.data.dbobjects.Player;
-import com.bradyrussell.data.dbobjects.Unit;
+import com.bradyrussell.data.dbobjects.*;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
  
@@ -21,6 +18,7 @@ public class DatabaseUtil {
                     .addAnnotatedClass(Kingdom.class)
                     .addAnnotatedClass(Building.class)
                     .addAnnotatedClass(Unit.class)
+                    .addAnnotatedClass(Army.class)
                     .setProperty("hibernate.connection.driver_class", "org.sqlite.JDBC")
                     .setProperty("hibernate.connection.url", ConnectionString)
                     .setProperty("hibernate.dialect", "org.sqlite.hibernate.dialect.SQLiteDialect")

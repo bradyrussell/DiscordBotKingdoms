@@ -1,6 +1,7 @@
 package com.bradyrussell;
 
 import com.bradyrussell.data.DatabaseUtil;
+import com.bradyrussell.game.ScheduledEvents;
 import com.bradyrussell.game.commands.*;
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
@@ -34,21 +35,20 @@ public class Main {
 
         final Activity activity = null;
 
-        CommandClient commandClient = commandBuilder.setPrefix(".").setAlternativePrefix("kingdom ").addCommands(
+        CommandClient commandClient = commandBuilder.setPrefix("kingdom ").setAlternativePrefix(".").addCommands(
                 new CommandCreateKingdom(eventWaiter),
                 new CommandSurrenderKingdom(eventWaiter),
                 new CommandBuildings(eventWaiter),
                 new CommandBuild(eventWaiter),
-                new CommandKingdom(eventWaiter)
+                new CommandKingdom(eventWaiter),
+                new CommandAttack(eventWaiter)
         ).setOwnerId("374003555478142997").setActivity(activity).build();
 
         JDA jda = JDABuilder.createDefault(args[0]).setActivity(activity).setLargeThreshold(20).addEventListeners(commandClient, eventWaiter).build();
         jda.awaitReady();
         System.out.println("Logged in!");
 
-        threadPool.scheduleWithFixedDelay(() -> {
-            System.out.println("Scheduled event!");
-        }, 0, 2, TimeUnit.HOURS);
+        threadPool.scheduleWithFixedDelay(()-> ScheduledEvents.setRandomActivity(jda), 0, 15, TimeUnit.MINUTES);
 
         Scanner scanner = new Scanner(System.in);
 

@@ -18,6 +18,7 @@ public class CommandSurrenderKingdom extends Command {
     public CommandSurrenderKingdom(EventWaiter eventWaiter) {
         this.name = "surrender";
         this.eventWaiter = eventWaiter;
+        this.help = "Abandon your kingdom, destroying it permanently.";
     }
 
     @Override

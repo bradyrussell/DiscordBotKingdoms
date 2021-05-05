@@ -27,7 +27,7 @@ public class Unit {
         this.ready = Timestamp.from(Instant.now().plusSeconds(60));
     }
 
-    boolean isReady() {
+    public boolean isReady() {
         return ready.before(Timestamp.from(Instant.now()));
     }
 
@@ -43,6 +43,9 @@ public class Unit {
 
     @Column(name = "health")
     public int health;
+
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "army", referencedColumnName = "id")
+    public Army army;
 
     @Column(name = "ready")
     public Timestamp ready;

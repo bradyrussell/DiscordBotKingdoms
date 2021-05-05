@@ -1,6 +1,7 @@
 package com.bradyrussell.data.dbobjects;
 
 import com.bradyrussell.data.BuildingTypes;
+import com.bradyrussell.data.ResourceTypes;
 import org.hibernate.Session;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -26,7 +27,7 @@ public class Building {
         this.ready = Timestamp.from(Instant.now().plusSeconds(60));
     }
 
-    boolean isReady() {
+    public boolean isReady() {
         return ready.before(Timestamp.from(Instant.now()));
     }
 
@@ -55,6 +56,21 @@ public class Building {
     public BuildingTypes type;
 
     public void tick(Session session, long elapsedSeconds) {
+
+        switch (type){
+
+            case ThroneRoom -> {
+                if(isReady())
+                kingdom.money+= elapsedSeconds;
+            }
+
+            case CopperMine -> {
+                if(isReady()) {
+                    kingdom.addResource(ResourceTypes.CopperMetal, elapsedSeconds);
+                }
+            }
+
+        }
 
         //session.saveOrUpdate(this);
     }

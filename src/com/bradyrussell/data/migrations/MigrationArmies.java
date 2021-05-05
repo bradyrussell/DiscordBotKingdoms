@@ -5,16 +5,13 @@ import com.bradyrussell.data.MigrationBase;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class MigrationUnits extends MigrationBase {
+public class MigrationArmies extends MigrationBase {
     @Override
     public void performMigration(Connection connection) throws SQLException {
-        connection.prepareStatement("CREATE TABLE units (" +
+        connection.prepareStatement("CREATE TABLE armies (" +
                 "id integer NOT NULL," +
                 "kingdom integer NOT NULL REFERENCES kingdoms(id) ON DELETE CASCADE ," +
-                "type text NOT NULL," +
-                "level integer NOT NULL," +
-                "health integer NOT NULL," +
-                "army integer," +
+                "name text NOT NULL," +
                 "ready integer NOT NULL," +
                 "created integer NOT NULL," +
                 "updated integer NOT NULL, " +
@@ -24,11 +21,11 @@ public class MigrationUnits extends MigrationBase {
 
     @Override
     public void revertMigration(Connection connection) throws SQLException {
-        connection.prepareStatement("DROP TABLE IF EXISTS units").execute();
+        connection.prepareStatement("DROP TABLE IF EXISTS armies").execute();
     }
 
     @Override
     public String getName() {
-        return "Units";
+        return "Armies";
     }
 }

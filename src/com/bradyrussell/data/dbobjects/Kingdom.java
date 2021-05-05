@@ -2,7 +2,9 @@ package com.bradyrussell.data.dbobjects;
 
 import com.bradyrussell.data.BuildingTypes;
 import com.bradyrussell.data.KingdomSizes;
+import com.bradyrussell.data.ResourceTypes;
 import com.bradyrussell.data.UnitTypes;
+import com.bradyrussell.data.converter.ResourcesMapConverter;
 import org.hibernate.Session;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -13,6 +15,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.sql.*;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +31,7 @@ public class Kingdom {
         this.population = 1;
         this.money = 50;
         this.lastTick = Timestamp.from(Instant.now());
+        this.resources = new HashMap<>();
     }
 
     public static Kingdom get(Session session, long id){
@@ -45,6 +49,18 @@ public class Kingdom {
 
     public String getSize() {
         return KingdomSizes.getByLevel(level).DisplayName;
+    }
+
+    public long getResource(ResourceTypes type) {
+        return resources.getOrDefault(type, 0L);
+    }
+
+    public void setResource(ResourceTypes type, long newValue) {
+        resources.put(type, newValue);
+    }
+
+    public void addResource(ResourceTypes type, long addValue) {
+        resources.put(type, getResource(type)+addValue);
     }
 
     public static long getCount(Session session) {
@@ -93,7 +109,8 @@ public class Kingdom {
     }
 
     public boolean hasPrerequisites(BuildingTypes type){
-        System.out.println("Building prereqs "+type.Prerequisites.entrySet().stream());
+        if(type.Prerequisites == null) return true;
+        System.out.println("Building prereqs: "+type.Prerequisites.entrySet().toString());
         for (Map.Entry<BuildingTypes, Integer> entry : type.Prerequisites.entrySet()) {
             if(!hasBuildingAtLevel(entry.getKey(),entry.getValue())) return false;
             System.out.println("Has "+entry.toString());
@@ -141,6 +158,12 @@ public class Kingdom {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "kingdom")
     public List<Building> buildings;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="kingdom")
+    public List<Army> armies;
+
+    @Convert(converter = ResourcesMapConverter.class)
+    public Map<ResourceTypes,Long> resources;
 
     // everything is responsible for saving itself if it changes
     public void tick(Session session) {

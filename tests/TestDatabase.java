@@ -2,10 +2,7 @@ import com.bradyrussell.data.BuildingTypes;
 import com.bradyrussell.data.DatabaseUtil;
 import com.bradyrussell.data.Migrations;
 import com.bradyrussell.data.UnitTypes;
-import com.bradyrussell.data.dbobjects.Building;
-import com.bradyrussell.data.dbobjects.Kingdom;
-import com.bradyrussell.data.dbobjects.Player;
-import com.bradyrussell.data.dbobjects.Unit;
+import com.bradyrussell.data.dbobjects.*;
 import org.apache.log4j.BasicConfigurator;
 import org.hibernate.Session;
 import org.junit.jupiter.api.*;
@@ -25,8 +22,9 @@ public class TestDatabase {
     private static final int WriteOrder = 1;
     private static final int PopulateOrder = 2;
     private static final int ReadOrder = 3;
-    private static final int DeleteOrder = 4;
-    private static final int AfterDeleteOrder = 5;
+    private static final int PostReadOrder = 4;
+    private static final int DeleteOrder = 5;
+    private static final int AfterDeleteOrder = 6;
 
     @BeforeAll
     static void setup(){
@@ -149,6 +147,32 @@ public class TestDatabase {
     }
 
     @Test @Order(ReadOrder)
+    public void testCreateArmy() {
+        try{
+            Session session = DatabaseUtil.getTestSessionFactory().openSession();
+            session.beginTransaction();
+
+
+            Player player = Player.get(session, 1234);
+
+            Army army = new Army(player.kingdom, "MyArmy");
+
+            army.units.add(player.kingdom.units.get(0));
+
+            session.persist(army);
+            session.getTransaction().commit();
+
+            session.beginTransaction(); // todo cant get army units to persist, also see cascade types
+            session.saveOrUpdate(player.kingdom.units.get(0));
+            session.getTransaction().commit();
+
+            session.close();
+        } catch (Exception e){
+            fail(e);
+        }
+    }
+
+    @Test @Order(ReadOrder)
     public void testCheckUnit() {
         try{
             Session session = DatabaseUtil.getTestSessionFactory().openSession();
@@ -163,12 +187,38 @@ public class TestDatabase {
         }
     }
 
+    @Test @Order(PostReadOrder)
+    public void testCheckArmy() {
+        try{
+            Session session = DatabaseUtil.getTestSessionFactory().openSession();
+
+            Player player = Player.get(session, 1234);
+
+            assertNotNull(player.kingdom);
+            assertNotNull(player.kingdom.armies);
+            assertNotNull(player.kingdom.armies.get(0));
+            assertNotNull(player.kingdom.armies.get(0).units);
+
+            assertTrue(player.kingdom.armies.get(0).units.size() > 0);
+
+            assertNotNull(player.kingdom.armies.get(0).units.get(0));
+
+            assertEquals(player.kingdom.armies.get(0).units.get(0),player.kingdom.units.get(0));
+
+            session.close();
+        } catch (Exception e){
+            fail(e);
+        }
+    }
+
     @Test @Order(ReadOrder)
     public void testCheckKingdom() {
         try{
             Session session = DatabaseUtil.getTestSessionFactory().openSession();
 
             Kingdom kingdom = Kingdom.getByOwnerId(session, 1234);
+
+            kingdom.tick(session);
 
             assertNotNull(kingdom);
             assertNotNull(kingdom.owner);

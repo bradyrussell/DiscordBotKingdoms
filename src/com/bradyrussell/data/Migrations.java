@@ -1,9 +1,6 @@
 package com.bradyrussell.data;
 
-import com.bradyrussell.data.migrations.MigrationBuildings;
-import com.bradyrussell.data.migrations.MigrationKingdoms;
-import com.bradyrussell.data.migrations.MigrationPlayers;
-import com.bradyrussell.data.migrations.MigrationUnits;
+import com.bradyrussell.data.migrations.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,7 +14,8 @@ public class Migrations {
                 new MigrationPlayers(),
                 new MigrationKingdoms(),
                 new MigrationUnits(),
-                new MigrationBuildings()
+                new MigrationBuildings(),
+                new MigrationArmies()
         ));
 
         System.out.println("Running migrations...");

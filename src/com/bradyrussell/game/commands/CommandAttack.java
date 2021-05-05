@@ -5,7 +5,6 @@ import com.bradyrussell.data.DatabaseUtil;
 import com.bradyrussell.data.Emojis;
 import com.bradyrussell.data.GoldUtil;
 import com.bradyrussell.data.dbobjects.Building;
-import com.bradyrussell.data.dbobjects.Kingdom;
 import com.bradyrussell.data.dbobjects.Player;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
@@ -15,13 +14,13 @@ import org.hibernate.Session;
 
 import java.util.concurrent.TimeUnit;
 
-public class CommandBuild extends Command {
+public class CommandAttack extends Command {
     private final EventWaiter eventWaiter;
 
-    public CommandBuild(EventWaiter eventWaiter) {
-        this.name = "build";
+    public CommandAttack(EventWaiter eventWaiter) {
+        this.name = "attack";
         this.eventWaiter = eventWaiter;
-        this.help = "Begin construction of a building. Build types can be seen with the buildings command.";
+        this.help = "Send an army to attack an enemy kingdom.";
     }
 
     @Override
@@ -33,41 +32,32 @@ public class CommandBuild extends Command {
             Player player = Player.get(session, commandEvent.getAuthor().getIdLong());
 
             if (player.kingdom != null) {
-                if (!commandEvent.getArgs().isBlank()) {
-                    BuildingTypes buildingType = BuildingTypes.search(commandEvent.getArgs().trim());
-                    if(buildingType != null) {
-                        if(player.kingdom.hasPrerequisites(buildingType)) {
-                            if(player.kingdom.money >= buildingType.BuildCost) {
+                if (!commandEvent.getArgs().isBlank() && commandEvent.getMessage().getMentionedUsers().size() > 0) {
+                    Player playerToAttack = Player.get(session, commandEvent.getMessage().getMentionedUsers().get(0).getIdLong());
+
+                    if(playerToAttack.kingdom != null) {
+                        if(true) {
+                            if(true) {
                                 new ButtonMenu.Builder()
                                         .setUsers(commandEvent.getAuthor())
                                         .setChoices(Emojis.CONFIRM, Emojis.CANCEL)
-                                        .setText("Are you sure you want to build this? It will cost "+ GoldUtil.getGoldSilverCopper(buildingType.BuildCost, true)+".")
-                                        .setDescription(buildingType.DisplayName)
+                                        .setText("Are you sure you want to attack? Your army will remain occupied for 10 minutes.")
+                                        .setDescription(playerToAttack.kingdom.name)
                                         .setAction(reactionEmote -> {
                                             if(reactionEmote.getName().equals(Emojis.CONFIRM)) {
                                                 Session session2 = DatabaseUtil.getProductionSessionFactory().openSession();
                                                 session2.refresh(player);
-                                                session2.beginTransaction();
 
-                                                if(player.kingdom.money < buildingType.BuildCost) {
-                                                    commandEvent.reply("Nice try, but you cannot afford to build this! :sunglasses: ");
-                                                    return;
-                                                }
+                                                player.kingdom.tick(session2);
 
-                                                player.kingdom.tick(session);
-
-                                                player.kingdom.money -= buildingType.BuildCost;
-                                                session2.saveOrUpdate(player.kingdom);
-
-                                                Building building = new Building(player.kingdom, buildingType);
-                                                session2.persist(building);
-
-                                                session2.getTransaction().commit();
+                                                // notify other player
+/*                                                session2.beginTransaction();
+                                                session2.getTransaction().commit();*/
                                                 session2.close();
 
-                                                commandEvent.getMessage().reply("You have built "+buildingType.DisplayName+"!").queue();
+                                                commandEvent.getMessage().reply("You have sent your army towards "+playerToAttack.kingdom.name+"! A messenger should return shortly!").queue();
                                             } else {
-                                                commandEvent.getMessage().reply("Canceled build!").queue();
+                                                commandEvent.getMessage().reply("Canceled attack!").queue();
                                             }
                                         })
                                         .setFinalAction(message -> {
@@ -79,15 +69,15 @@ public class CommandBuild extends Command {
                             }
                         } else {
                             commandEvent.getMessage().addReaction(Emojis.CANCEL).queue();
-                            commandEvent.reply("You do not have all the prerequisites to build this! Requires: "+buildingType.prerequisitesString());
+                            commandEvent.reply("You do not have any armies available!");
                         }
                     } else {
                         commandEvent.getMessage().addReaction(Emojis.CANCEL).queue();
-                        commandEvent.reply("Unknown building type!");
+                        commandEvent.reply("They are not the leader of a kingdom!");
                     }
                 } else {
                     commandEvent.getMessage().addReaction(Emojis.CANCEL).queue();
-                    commandEvent.reply("You must specify the type of building: build <type> ! Use the \"buildings\" command to see what types are available.");
+                    commandEvent.reply("You must specify who you want to attack with an @mention!");
                 }
             } else {
                 commandEvent.getMessage().addReaction(Emojis.CANCEL).queue();

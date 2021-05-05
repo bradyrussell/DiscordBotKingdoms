@@ -1,10 +1,15 @@
 package com.bradyrussell.data;
 
 public enum ResourceTypes {
-    CopperMetal,
-    IronMetal,
-    SilverMetal,
-    GoldMetal,
-    Wheat,
+    CopperMetal("Copper Ore"),
+    IronMetal("Iron Ore"),
+    SilverMetal("Silver Ore"),
+    GoldMetal("Gold Ore"),
+    Wheat("Wheat"),
+    ;
+    public final String DisplayName;
 
+    ResourceTypes(String displayName) {
+        DisplayName = displayName;
+    }
 }
