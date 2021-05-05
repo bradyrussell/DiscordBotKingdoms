@@ -15,6 +15,7 @@ public class MigrationKingdoms extends MigrationBase {
                 "level integer NOT NULL," +
                 "money integer NOT NULL," +
                 "population integer NOT NULL," +
+                "last_tick integer NOT NULL," +
                 "created integer NOT NULL," +
                 "updated integer NOT NULL, " +
                 "PRIMARY KEY (id))"

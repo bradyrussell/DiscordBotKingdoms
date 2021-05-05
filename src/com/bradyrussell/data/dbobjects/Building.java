@@ -26,6 +26,10 @@ public class Building {
         this.ready = Timestamp.from(Instant.now().plusSeconds(60));
     }
 
+    boolean isReady() {
+        return ready.before(Timestamp.from(Instant.now()));
+    }
+
     @Id @Column(name = "id")  @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long id;
 
@@ -49,4 +53,9 @@ public class Building {
 
     @Column(name = "type") @Enumerated(EnumType.STRING)
     public BuildingTypes type;
+
+    public void tick(Session session, long elapsedSeconds) {
+
+        //session.saveOrUpdate(this);
+    }
 }

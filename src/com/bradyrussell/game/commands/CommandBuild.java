@@ -34,43 +34,48 @@ public class CommandBuild extends Command {
                 if (!commandEvent.getArgs().isBlank()) {
                     BuildingTypes buildingType = BuildingTypes.search(commandEvent.getArgs().trim());
                     if(buildingType != null) {
-                        if(player.kingdom.money >= buildingType.BuildCost) {
-                            new ButtonMenu.Builder()
-                                    .setUsers(commandEvent.getAuthor())
-                                    .setChoices(Emojis.CONFIRM, Emojis.CANCEL)
-                                    .setText("Are you sure you want to build this?")
-                                    .setDescription(buildingType.DisplayName)
-                                    .setAction(reactionEmote -> {
-                                        if(reactionEmote.getName().equals(Emojis.CONFIRM)) {
-                                            Session session2 = DatabaseUtil.getProductionSessionFactory().openSession();
-                                            session2.refresh(player);
-                                            session2.beginTransaction();
+                        if(player.kingdom.hasPrerequisites(buildingType)) {
+                            if(player.kingdom.money >= buildingType.BuildCost) {
+                                new ButtonMenu.Builder()
+                                        .setUsers(commandEvent.getAuthor())
+                                        .setChoices(Emojis.CONFIRM, Emojis.CANCEL)
+                                        .setText("Are you sure you want to build this?")
+                                        .setDescription(buildingType.DisplayName)
+                                        .setAction(reactionEmote -> {
+                                            if(reactionEmote.getName().equals(Emojis.CONFIRM)) {
+                                                Session session2 = DatabaseUtil.getProductionSessionFactory().openSession();
+                                                session2.refresh(player);
+                                                session2.beginTransaction();
 
-                                            if(player.kingdom.money < buildingType.BuildCost) {
-                                                commandEvent.reply("Nice try, but you cannot afford to build this! :sunglasses: ");
-                                                return;
+                                                if(player.kingdom.money < buildingType.BuildCost) {
+                                                    commandEvent.reply("Nice try, but you cannot afford to build this! :sunglasses: ");
+                                                    return;
+                                                }
+
+                                                player.kingdom.money -= buildingType.BuildCost;
+                                                session2.saveOrUpdate(player.kingdom);
+
+                                                Building building = new Building(player.kingdom, buildingType);
+                                                session2.persist(building);
+
+                                                session2.getTransaction().commit();
+                                                session2.close();
+
+                                                commandEvent.getMessage().reply("You have built "+buildingType.DisplayName+"!").queue();
+                                            } else {
+                                                commandEvent.getMessage().reply("Canceled build!").queue();
                                             }
-
-                                            player.kingdom.money -= buildingType.BuildCost;
-                                            session2.saveOrUpdate(player.kingdom);
-
-                                            Building building = new Building(player.kingdom, buildingType);
-                                            session2.persist(building);
-
-                                            session2.getTransaction().commit();
-                                            session2.close();
-
-                                            commandEvent.getMessage().reply("You have built "+buildingType.DisplayName+"!").queue();
-                                        } else {
-                                            commandEvent.getMessage().reply("Canceled build!").queue();
-                                        }
-                                    })
-                                    .setFinalAction(message -> {
-                                        message.clearReactions().queue();
-                                    }).setEventWaiter(eventWaiter).setTimeout(30, TimeUnit.SECONDS).build().display(commandEvent.getChannel());
+                                        })
+                                        .setFinalAction(message -> {
+                                            message.clearReactions().queue();
+                                        }).setEventWaiter(eventWaiter).setTimeout(30, TimeUnit.SECONDS).build().display(commandEvent.getChannel());
+                            } else {
+                                commandEvent.getMessage().addReaction(Emojis.CANCEL).queue();
+                                commandEvent.reply("You cannot afford to build this!");
+                            }
                         } else {
                             commandEvent.getMessage().addReaction(Emojis.CANCEL).queue();
-                            commandEvent.reply("You cannot afford to build this!");
+                            commandEvent.reply("You do not have all the prerequisites to build this! Requires: "+buildingType.prerequisitesString());
                         }
                     } else {
                         commandEvent.getMessage().addReaction(Emojis.CANCEL).queue();

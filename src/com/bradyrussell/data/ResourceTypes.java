@@ -5,4 +5,6 @@ public enum ResourceTypes {
     IronMetal,
     SilverMetal,
     GoldMetal,
+    Wheat,
+
 }

@@ -1,10 +1,7 @@
 package com.bradyrussell;
 
 import com.bradyrussell.data.DatabaseUtil;
-import com.bradyrussell.game.commands.CommandBuild;
-import com.bradyrussell.game.commands.CommandBuildings;
-import com.bradyrussell.game.commands.CommandCreateKingdom;
-import com.bradyrussell.game.commands.CommandSurrenderKingdom;
+import com.bradyrussell.game.commands.*;
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
@@ -41,7 +38,8 @@ public class Main {
                 new CommandCreateKingdom(eventWaiter),
                 new CommandSurrenderKingdom(eventWaiter),
                 new CommandBuildings(eventWaiter),
-                new CommandBuild(eventWaiter)
+                new CommandBuild(eventWaiter),
+                new CommandKingdom(eventWaiter)
         ).setOwnerId("374003555478142997").setActivity(activity).build();
 
         JDA jda = JDABuilder.createDefault(args[0]).setActivity(activity).setLargeThreshold(20).addEventListeners(commandClient, eventWaiter).build();

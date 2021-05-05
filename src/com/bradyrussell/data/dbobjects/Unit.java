@@ -27,6 +27,10 @@ public class Unit {
         this.ready = Timestamp.from(Instant.now().plusSeconds(60));
     }
 
+    boolean isReady() {
+        return ready.before(Timestamp.from(Instant.now()));
+    }
+
     @Id
     @Column(name = "id")  @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long id;
@@ -53,4 +57,9 @@ public class Unit {
 
     @Column(name = "type") @Enumerated(EnumType.STRING)
     public UnitTypes type;
+
+    public void tick(Session session, long elapsedSeconds) {
+
+        //session.saveOrUpdate(this);
+    }
 }

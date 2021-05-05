@@ -28,7 +28,7 @@ public class CommandBuildings extends Command {
         StringBuilder sb = new StringBuilder();
         sb.append("Available buildings: \n");
         for (BuildingTypes type : BuildingTypes.values()) {
-            sb.append(type.DisplayName).append(":\t\t").append(GoldUtil.getGoldSilverCopper(type.BuildCost)).append("\t\tRequires: ").append(type.prerequisitesString()).append("\t\t").append(type.Description).append("\n");
+            sb.append(type.DisplayName).append(":\t\t").append(GoldUtil.getGoldSilverCopper(type.BuildCost, true)).append("\t\tRequires: ").append(type.prerequisitesString()).append("\t\t").append(type.Description).append("\n");
         }
 
         commandEvent.reply(sb.toString());
