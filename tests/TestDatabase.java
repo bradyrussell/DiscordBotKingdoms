@@ -84,6 +84,8 @@ public class TestDatabase {
             int userid = ThreadLocalRandom.current().nextInt();
             Player player = Player.get(session, userid);
 
+            session.persist(player);
+
             assertEquals(player.userid, userid);
 
             session.close();
@@ -157,13 +159,9 @@ public class TestDatabase {
 
             Army army = new Army(player.kingdom, "MyArmy");
 
-            army.units.add(player.kingdom.units.get(0));
+            army.addUnit(player.kingdom.units.get(0));
 
             session.persist(army);
-            session.getTransaction().commit();
-
-            session.beginTransaction(); // todo cant get army units to persist, also see cascade types
-            session.saveOrUpdate(player.kingdom.units.get(0));
             session.getTransaction().commit();
 
             session.close();

@@ -47,6 +47,8 @@ public class CommandBuild extends Command {
                                             if(reactionEmote.getName().equals(Emojis.CONFIRM)) {
                                                 Session session2 = DatabaseUtil.getProductionSessionFactory().openSession();
                                                 session2.refresh(player);
+                                                session2.refresh(player.kingdom);
+                                                player.kingdom.tick(session2);
                                                 session2.beginTransaction();
 
                                                 if(player.kingdom.money < buildingType.BuildCost) {
@@ -54,7 +56,7 @@ public class CommandBuild extends Command {
                                                     return;
                                                 }
 
-                                                player.kingdom.tick(session);
+
 
                                                 player.kingdom.money -= buildingType.BuildCost;
                                                 session2.saveOrUpdate(player.kingdom);

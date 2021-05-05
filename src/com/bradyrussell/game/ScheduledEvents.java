@@ -2,6 +2,7 @@ package com.bradyrussell.game;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Activity;
+import org.hibernate.Session;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,5 +13,9 @@ public class ScheduledEvents {
 
     public static void setRandomActivity(JDA jda){
         jda.getPresence().setActivity(activityList.get(ThreadLocalRandom.current().nextInt(activityList.size())));
+    }
+
+    public static void updateAIKingdoms(Session session) {
+
     }
 }

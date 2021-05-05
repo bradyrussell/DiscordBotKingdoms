@@ -5,7 +5,12 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.sql.*;
+import java.util.List;
+import java.util.Map;
 
 @Entity @Table(name="players")
 public class Player {
@@ -41,4 +46,25 @@ public class Player {
 
     @OneToOne(mappedBy = "owner", fetch = FetchType.LAZY)
     public Kingdom kingdom;
+
+    public static final Map<String, Integer> AINames = Map.of(
+            "William", -1,
+            "Billiam", -2,
+            "Chilliam", -3,
+            "Killiam", -4,
+            "Zilliam", -5
+    );
+
+    public boolean isAI() {
+        return userid < 0;
+    }
+
+    public static List<Player> getAIs(Session session) {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Player> query = builder.createQuery(Player.class);
+        Root<Player> root = query.from(Player.class);
+        query.select(root).where(builder.lessThan(root.get("userid"), 0));
+
+        return session.createQuery(query).getResultList();
+    }
 }

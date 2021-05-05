@@ -47,6 +47,15 @@ public class Kingdom {
         return session.createQuery(query).getSingleResult();
     }
 
+    public static Kingdom getByLevel(Session session, long minLevel, long maxLevel) {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Kingdom> query = builder.createQuery(Kingdom.class);
+        Root<Kingdom> root = query.from(Kingdom.class);
+        query.select(root).where(builder.between(root.get("level"), minLevel, maxLevel));
+
+        return session.createQuery(query).getSingleResult();
+    }
+
     public String getSize() {
         return KingdomSizes.getByLevel(level).DisplayName;
     }
