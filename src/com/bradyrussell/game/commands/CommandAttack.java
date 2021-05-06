@@ -4,12 +4,15 @@ import com.bradyrussell.data.BuildingTypes;
 import com.bradyrussell.data.DatabaseUtil;
 import com.bradyrussell.data.Emojis;
 import com.bradyrussell.data.GoldUtil;
+import com.bradyrussell.data.dbobjects.Army;
 import com.bradyrussell.data.dbobjects.Building;
 import com.bradyrussell.data.dbobjects.Player;
+import com.bradyrussell.data.dbobjects.Unit;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.jagrosh.jdautilities.menu.ButtonMenu;
+import com.jagrosh.jdautilities.menu.SelectionDialog;
 import org.hibernate.Session;
 
 import java.util.concurrent.TimeUnit;
@@ -37,36 +40,56 @@ public class CommandAttack extends Command {
 
                     if(playerToAttack.kingdom != null) {
                         if(true) {
-                            if(true) {
-                                new ButtonMenu.Builder()
-                                        .setUsers(commandEvent.getAuthor())
-                                        .setChoices(Emojis.CONFIRM, Emojis.CANCEL)
-                                        .setText("Are you sure you want to attack? Your army will remain occupied for 10 minutes.")
-                                        .setDescription(playerToAttack.kingdom.name)
-                                        .setAction(reactionEmote -> {
-                                            if(reactionEmote.getName().equals(Emojis.CONFIRM)) {
-                                                Session session2 = DatabaseUtil.getProductionSessionFactory().openSession();
-                                                session2.refresh(player);
 
-                                                player.kingdom.tick(session2);
+                            SelectionDialog.Builder builder = new SelectionDialog.Builder()
+                                    .setUsers(commandEvent.getAuthor())
+                                    .setText("Attack with which army?")
+                                    .setSelectedEnds(">", "<")
+                                    .setSelectionConsumer((m, i) -> {
 
-                                                // notify other player
+                                        if(true) {
+                                            new ButtonMenu.Builder()
+                                                    .setUsers(commandEvent.getAuthor())
+                                                    .setChoices(Emojis.CONFIRM, Emojis.CANCEL)
+                                                    .setText("Are you sure you want to attack? Your army will remain occupied for 10 minutes.")
+                                                    .setDescription(playerToAttack.kingdom.name)
+                                                    .setAction(reactionEmote -> {
+                                                        if(reactionEmote.getName().equals(Emojis.CONFIRM)) {
+                                                            Session session2 = DatabaseUtil.getProductionSessionFactory().openSession();
+                                                            session2.refresh(player);
+
+                                                            player.kingdom.tick(session2);
+
+                                                            // notify other player
 /*                                                session2.beginTransaction();
                                                 session2.getTransaction().commit();*/
-                                                session2.close();
+                                                            session2.close();
 
-                                                commandEvent.getMessage().reply("You have sent your army towards "+playerToAttack.kingdom.name+"! A messenger should return shortly!").queue();
-                                            } else {
-                                                commandEvent.getMessage().reply("Canceled attack!").queue();
-                                            }
-                                        })
-                                        .setFinalAction(message -> {
-                                            message.clearReactions().queue();
-                                        }).setEventWaiter(eventWaiter).setTimeout(30, TimeUnit.SECONDS).build().display(commandEvent.getChannel());
-                            } else {
-                                commandEvent.getMessage().addReaction(Emojis.CANCEL).queue();
-                                commandEvent.reply("You cannot afford to build this!");
+                                                            commandEvent.getMessage().reply("You have sent your army towards "+playerToAttack.kingdom.name+"! A messenger should return shortly!").queue();
+                                                        } else {
+                                                            commandEvent.getMessage().reply("Canceled attack!").queue();
+                                                        }
+                                                    })
+                                                    .setFinalAction(message -> {
+                                                        message.clearReactions().queue();
+                                                    }).setEventWaiter(eventWaiter).setTimeout(30, TimeUnit.SECONDS).build().display(commandEvent.getChannel());
+                                        } else {
+                                            commandEvent.getMessage().addReaction(Emojis.CANCEL).queue();
+                                            commandEvent.reply("You cannot afford to build this!");
+                                        }
+
+                                        m.clearReactions().queue();
+                                    })
+                                    .setCanceled((m) -> {
+                                        m.clearReactions().queue();
+                                    })
+                                    .setEventWaiter(eventWaiter).useSingleSelectionMode(true).setTimeout(15, TimeUnit.SECONDS);
+
+                            for (Army army : player.kingdom.armies) {
+                                builder.addChoices(army.name);
                             }
+
+                            builder.build().display(commandEvent.getChannel());
                         } else {
                             commandEvent.getMessage().addReaction(Emojis.CANCEL).queue();
                             commandEvent.reply("You do not have any armies available!");

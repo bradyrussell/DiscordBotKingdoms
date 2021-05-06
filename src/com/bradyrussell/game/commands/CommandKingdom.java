@@ -36,7 +36,6 @@ public class CommandKingdom extends Command {
         try {
             Player player = Player.get(session, commandEvent.getAuthor().getIdLong());
 
-            //session.flush();
             session.clear();
 
             if (player.kingdom != null) {
