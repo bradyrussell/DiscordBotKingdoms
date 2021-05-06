@@ -173,6 +173,29 @@ public class TestDatabase {
         }
     }
 
+    @Test @Order(PostReadOrder)
+    public void testAddToArmy() {
+        try{
+            Session session = DatabaseUtil.getTestSessionFactory().openSession();
+            session.beginTransaction();
+
+
+            Player player = Player.get(session, 1234);
+
+            Unit unit = new Unit(player.kingdom, UnitTypes.Archer);
+
+            player.kingdom.armies.get(0).addUnit(unit);
+
+            session.persist(unit);
+            session.persist(player.kingdom.armies.get(0));
+            session.getTransaction().commit();
+
+            session.close();
+        } catch (Exception e){
+            fail(e);
+        }
+    }
+
     @Test @Order(ReadOrder)
     public void testCheckUnit() {
         try{
@@ -226,7 +249,7 @@ public class TestDatabase {
             assertNotNull(player.kingdom.armies.get(0));
             assertNotNull(player.kingdom.armies.get(0).units);
 
-            assertTrue(player.kingdom.armies.get(0).units.size() > 0);
+            assertTrue(player.kingdom.armies.get(0).units.size() > 1);
 
             assertNotNull(player.kingdom.armies.get(0).units.get(0));
 

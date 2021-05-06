@@ -11,6 +11,7 @@ import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.jagrosh.jdautilities.menu.ButtonMenu;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 
 import java.time.Instant;
@@ -34,6 +35,9 @@ public class CommandKingdom extends Command {
         try {
             Player player = Player.get(session, commandEvent.getAuthor().getIdLong());
 
+            //session.flush();
+            session.clear();
+
             if (player.kingdom != null) {
 
                 session.refresh(player.kingdom);
@@ -46,12 +50,25 @@ public class CommandKingdom extends Command {
                 String buildings = sb.toString();
 
                 sb = new StringBuilder();
-                for (ResourceTypes value : ResourceTypes.values()) { // todo why is this null?????
+                for (ResourceTypes value : ResourceTypes.values()) {
                     sb.append(value.DisplayName).append(": ").append(player.kingdom.getResource(value)).append("\n");
                 }
                 String resources = sb.toString();
 
                 commandEvent.reply("Armies: "+player.kingdom.armies.size());
+                for (Army army : player.kingdom.armies) {
+                    Hibernate.unproxy(army);
+                    session.refresh(army);
+                    if(army == null) {
+                        commandEvent.reply("Null army!");
+                    } else {
+                        if (army.name == null) {
+                            commandEvent.reply("Null name!");
+                        } else {
+                            commandEvent.reply(army.name);
+                        }
+                    }
+                }
 
                 sb = new StringBuilder();
                 for (Army army:player.kingdom.armies) {
