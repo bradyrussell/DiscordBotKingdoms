@@ -21,7 +21,7 @@ public class CommandBuild extends Command {
     public CommandBuild(EventWaiter eventWaiter) {
         this.name = "build";
         this.eventWaiter = eventWaiter;
-        this.help = "Begin construction of a building. Build types can be seen with the buildings command.";
+        this.help = "Begin construction of a building. Building types can be seen with the buildings command.";
     }
 
     @Override

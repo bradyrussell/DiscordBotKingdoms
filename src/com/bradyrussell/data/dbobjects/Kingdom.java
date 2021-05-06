@@ -81,11 +81,38 @@ public class Kingdom {
         return session.createQuery(query).getSingleResult();
     }
 
+    public long getBuildingCount(Session session) {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Long> query = builder.createQuery(Long.class);
+        Root<Building> root = query.from(Building.class);
+        query.select(builder.count(root)).where(builder.equal(root.get("kingdom"), id));
+
+        return session.createQuery(query).getSingleResult();
+    }
+
+    public long getUnitCount(Session session) {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Long> query = builder.createQuery(Long.class);
+        Root<Unit> root = query.from(Unit.class);
+        query.select(builder.count(root)).where(builder.equal(root.get("kingdom"), id));
+
+        return session.createQuery(query).getSingleResult();
+    }
+
+    public long getArmyCount(Session session) {
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Long> query = builder.createQuery(Long.class);
+        Root<Army> root = query.from(Army.class);
+        query.select(builder.count(root)).where(builder.equal(root.get("kingdom"), id));
+
+        return session.createQuery(query).getSingleResult();
+    }
+
     public long getBuildingCountByType(Session session, BuildingTypes type) {
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<Long> query = builder.createQuery(Long.class);
         Root<Building> root = query.from(Building.class);
-        query.select(builder.count(root)).where(builder.equal(root.get("type"), type)).where(builder.equal(root.get("kingdom"), id));
+        query.select(builder.count(root)).where(builder.and(builder.equal(root.get("type"), type), builder.equal(root.get("kingdom"), id)));
 
         return session.createQuery(query).getSingleResult();
     }
@@ -94,42 +121,48 @@ public class Kingdom {
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<Long> query = builder.createQuery(Long.class);
         Root<Unit> root = query.from(Unit.class);
-        query.select(builder.count(root)).where(builder.equal(root.get("type"), type)).where(builder.equal(root.get("kingdom"), id));
+        query.select(builder.count(root)).where(builder.and(builder.equal(root.get("type"), type), builder.equal(root.get("kingdom"), id)));
 
         return session.createQuery(query).getSingleResult();
     }
 
-    public List<Building> getBuildingsByType(Session session, BuildingTypes type) {
+    public List<Building> getBuildingsByType(Session session, BuildingTypes type, long minLevel) {
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<Building> query = builder.createQuery(Building.class);
         Root<Building> root = query.from(Building.class);
-        query.select(root).where(builder.equal(root.get("type"), type)).where(builder.equal(root.get("kingdom"), id));
+        query.select(root).where(builder.and(builder.equal(root.get("type"), type), builder.equal(root.get("kingdom"), id), builder.ge(root.get("level"), minLevel)));
 
         return session.createQuery(query).getResultList();
     }
 
-    public List<Unit> getUnitsByType(Session session, UnitTypes type) {
+    public List<Unit> getUnitsByType(Session session, UnitTypes type, long minLevel) {
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<Unit> query = builder.createQuery(Unit.class);
         Root<Unit> root = query.from(Unit.class);
-        query.select(root).where(builder.equal(root.get("type"), type)).where(builder.equal(root.get("kingdom"), id));
+        query.select(root).where(builder.and(builder.equal(root.get("type"), type), builder.equal(root.get("kingdom"), id), builder.ge(root.get("level"), minLevel)));
 
         return session.createQuery(query).getResultList();
     }
 
     public boolean hasPrerequisites(BuildingTypes type){
         if(type.Prerequisites == null) return true;
-        System.out.println("Building prereqs: "+type.Prerequisites.entrySet().toString());
         for (Map.Entry<BuildingTypes, Integer> entry : type.Prerequisites.entrySet()) {
             if(!hasBuildingAtLevel(entry.getKey(),entry.getValue())) return false;
-            System.out.println("Has "+entry.toString());
         }
         return true;
     }
 
+    public long getUnitsUpkeep() {
+        long total = 0;
+        for (Unit unit : units) {
+            total += unit.type.UpkeepCost;
+        }
+        return total;
+    }
+
     public boolean hasBuildingAtLevel(BuildingTypes type, int level){
         for (Building building : buildings) {
-            if(building.isReady() && building.type.equals(type) && building.level >= level) return true;
+            if(building.isConstructed() && building.isReady() && building.type.equals(type) && building.level >= level) return true;
         }
         return false;
     }
@@ -168,7 +201,7 @@ public class Kingdom {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "kingdom")
     public List<Building> buildings;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy="kingdom")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "kingdom")
     public List<Army> armies;
 
     @Convert(converter = ResourcesMapConverter.class)

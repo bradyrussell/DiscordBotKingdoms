@@ -23,8 +23,9 @@ public class TestDatabase {
     private static final int PopulateOrder = 2;
     private static final int ReadOrder = 3;
     private static final int PostReadOrder = 4;
-    private static final int DeleteOrder = 5;
-    private static final int AfterDeleteOrder = 6;
+    private static final int PreDeleteOrder = 5;
+    private static final int DeleteOrder = 6;
+    private static final int AfterDeleteOrder = 7;
 
     @BeforeAll
     static void setup(){
@@ -119,6 +120,7 @@ public class TestDatabase {
             session.beginTransaction();
 
             Building building = new Building(Kingdom.getByOwnerId(session,1234), BuildingTypes.ThroneRoom);
+            building.setOccupiedFor(300);
 
             session.persist(building);
             session.getTransaction().commit();
@@ -137,6 +139,7 @@ public class TestDatabase {
             session.beginTransaction();
 
             Unit unit = new Unit(Kingdom.getByOwnerId(session, 1234), UnitTypes.Wizard);
+            unit.setOccupiedFor(300);
 
             session.persist(unit);
             session.getTransaction().commit();
@@ -177,7 +180,7 @@ public class TestDatabase {
 
             Player player = Player.get(session, 1234);
 
-            System.out.println(player.kingdom.units.get(0).ready.toLocaleString());
+            assertFalse(player.kingdom.units.get(0).isReady());
 
             session.close();
         } catch (Exception e){
@@ -191,6 +194,32 @@ public class TestDatabase {
             Session session = DatabaseUtil.getTestSessionFactory().openSession();
 
             Player player = Player.get(session, 1234);
+
+            assertNotNull(player.kingdom);
+            assertNotNull(player.kingdom.armies);
+            assertNotNull(player.kingdom.armies.get(0));
+            assertNotNull(player.kingdom.armies.get(0).units);
+
+            assertTrue(player.kingdom.armies.get(0).units.size() > 0);
+
+            assertNotNull(player.kingdom.armies.get(0).units.get(0));
+
+            assertEquals(player.kingdom.armies.get(0).units.get(0),player.kingdom.units.get(0));
+
+            session.close();
+        } catch (Exception e){
+            fail(e);
+        }
+    }
+
+    @Test @Order(PreDeleteOrder)
+    public void testCheckArmyAgain() {
+        try{
+            Session session = DatabaseUtil.getTestSessionFactory().openSession();
+
+            Player player = Player.get(session, 1234);
+
+
 
             assertNotNull(player.kingdom);
             assertNotNull(player.kingdom.armies);
@@ -223,12 +252,13 @@ public class TestDatabase {
             assertEquals(kingdom.owner.userid, 1234);
 
             assertTrue(kingdom.units.size() > 0);
-            assertTrue(kingdom.getUnitsByType(session,UnitTypes.Wizard).size() > 0);
+            assertTrue(kingdom.getUnitsByType(session,UnitTypes.Wizard, 1).size() > 0);
             assertTrue(kingdom.getUnitCountByType(session,UnitTypes.Wizard) > 0);
             assertEquals(kingdom.units.get(0).type,UnitTypes.Wizard);
 
             assertTrue(kingdom.buildings.size() > 0);
-            assertTrue(kingdom.getBuildingsByType(session,BuildingTypes.ThroneRoom).size() > 0);
+            assertFalse(kingdom.buildings.get(0).isReady());
+            assertTrue(kingdom.getBuildingsByType(session,BuildingTypes.ThroneRoom, 1).size() > 0);
             assertTrue(kingdom.getBuildingCountByType(session,BuildingTypes.ThroneRoom) > 0);
             assertEquals(kingdom.buildings.get(0).type,BuildingTypes.ThroneRoom);
 

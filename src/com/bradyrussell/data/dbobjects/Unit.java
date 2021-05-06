@@ -24,11 +24,17 @@ public class Unit {
         this.type = type;
         this.level = 1;
         this.health = type.MaxHealth;
-        this.ready = Timestamp.from(Instant.now().plusSeconds(60));
+        this.ready = Timestamp.from(Instant.now());
     }
 
+    // are we occupied
     public boolean isReady() {
         return ready.before(Timestamp.from(Instant.now()));
+    }
+    public void setOccupiedFor(long seconds) { ready = Timestamp.from(Instant.now().plusSeconds(seconds)); }
+
+    public boolean isTrained() {
+        return created.before(Timestamp.from(Instant.now().minusSeconds(type.TrainingTime)));
     }
 
     @Id
@@ -60,6 +66,10 @@ public class Unit {
 
     @Column(name = "type") @Enumerated(EnumType.STRING)
     public UnitTypes type;
+
+    public boolean isInArmy() {
+        return army != null;
+    }
 
     public void tick(Session session, long elapsedSeconds) {
 

@@ -24,11 +24,14 @@ public class Building {
         this.type = type;
         this.level = 1;
         this.health = type.MaxHealth;
-        this.ready = Timestamp.from(Instant.now().plusSeconds(60));
+        this.ready = Timestamp.from(Instant.now());
     }
 
-    public boolean isReady() {
-        return ready.before(Timestamp.from(Instant.now()));
+    public boolean isReady() { return ready.before(Timestamp.from(Instant.now())); }
+    public void setOccupiedFor(long seconds) { ready = Timestamp.from(Instant.now().plusSeconds(seconds)); }
+
+    public boolean isConstructed() {
+        return created.before(Timestamp.from(Instant.now().minusSeconds(type.BuildingTime)));
     }
 
     @Id @Column(name = "id")  @GeneratedValue(strategy = GenerationType.IDENTITY)
