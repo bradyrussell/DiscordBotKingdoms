@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 
+import java.text.NumberFormat;
 import java.time.Instant;
 import java.util.concurrent.TimeUnit;
 
@@ -49,8 +50,10 @@ public class CommandKingdom extends Command {
                 String buildings = sb.toString();
 
                 sb = new StringBuilder();
+                NumberFormat nf = NumberFormat.getInstance();
+                nf.setGroupingUsed(true);
                 for (ResourceTypes value : ResourceTypes.values()) {
-                    sb.append(value.DisplayName).append(": ").append(player.kingdom.getResource(value)).append("\n");
+                    sb.append(value.DisplayName).append(": ").append(nf.format(player.kingdom.getResource(value))).append("\n");
                 }
                 String resources = sb.toString();
 
