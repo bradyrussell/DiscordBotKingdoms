@@ -40,7 +40,9 @@ public class CommandAssign extends Command {
 
                         UnitTypes specifiedType;
                         Integer specifiedLevel = null;
+
                         String[] split = commandEvent.getArgs().split(" ");
+
                         if(split[0].equalsIgnoreCase("level")) {
                             try {
                                 specifiedLevel = Integer.parseInt(split[1]);

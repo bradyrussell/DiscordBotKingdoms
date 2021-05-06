@@ -50,7 +50,8 @@ public class Unit {
     @Column(name = "health")
     public int health;
 
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "army", referencedColumnName = "id")
+    //cannot be lazy
+    @ManyToOne(/*fetch = FetchType.LAZY*/) @JoinColumn(name = "army", referencedColumnName = "id")
     public Army army;
 
     @Column(name = "ready")

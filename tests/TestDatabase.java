@@ -82,7 +82,7 @@ public class TestDatabase {
         try{
             Session session = DatabaseUtil.getTestSessionFactory().openSession();
 
-            int userid = ThreadLocalRandom.current().nextInt();
+            int userid = Math.abs(ThreadLocalRandom.current().nextInt());
             Player player = Player.get(session, userid);
 
             session.persist(player);
@@ -112,6 +112,7 @@ public class TestDatabase {
             fail(e);
         }
     }
+
 
     @Test @Order(PopulateOrder)
     public void testCreateBuilding() {

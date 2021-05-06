@@ -39,7 +39,6 @@ public class CommandKingdom extends Command {
             session.clear();
 
             if (player.kingdom != null) {
-
                 session.refresh(player.kingdom);
                 player.kingdom.tick(session);
 
@@ -54,21 +53,6 @@ public class CommandKingdom extends Command {
                     sb.append(value.DisplayName).append(": ").append(player.kingdom.getResource(value)).append("\n");
                 }
                 String resources = sb.toString();
-
-                commandEvent.reply("Armies: "+player.kingdom.armies.size());
-                for (Army army : player.kingdom.armies) {
-                    Hibernate.unproxy(army);
-                    session.refresh(army);
-                    if(army == null) {
-                        commandEvent.reply("Null army!");
-                    } else {
-                        if (army.name == null) {
-                            commandEvent.reply("Null name!");
-                        } else {
-                            commandEvent.reply(army.name);
-                        }
-                    }
-                }
 
                 sb = new StringBuilder();
                 for (Army army:player.kingdom.armies) {

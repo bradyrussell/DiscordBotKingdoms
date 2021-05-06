@@ -10,7 +10,7 @@ public enum AssetEmojis {
     Sword2("<:sword_2:839294455769202718>"),
     Sword3("<:sword_3:839294455676010516>"),
 
-    PotionBlue("<:blue_potion:839294455617683486>"),
+    PotionBlue("<:blue_potion:839294455617683486>"), // can apply potions to armies than apply buffs next combat?
     PotionGreen("<:green_potion:839294455692787712>"),
     PotionRed("<:red_potion:839294455596580884>"),
 

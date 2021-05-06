@@ -45,6 +45,11 @@ public class TestArmyIssue {
                 System.out.println(army.name);
             }
 
+            for (Unit unit : units) {
+                assertNotNull(unit);
+                System.out.println(unit.type.DisplayName);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
