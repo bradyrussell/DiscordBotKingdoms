@@ -42,7 +42,7 @@ public class Army {
     @Column(name = "updated")
     public Timestamp updated;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy="army"/*, cascade = {CascadeType.PERSIST, CascadeType.REFRESH}*/)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="army")
     public List<Unit> units;
 
     public void addUnit(Unit unit){
