@@ -10,6 +10,7 @@ public class MigrationPlayers extends MigrationBase {
     public void performMigration(Connection connection) throws SQLException {
         connection.prepareStatement("CREATE TABLE players (" +
                 "userid integer NOT NULL, " +
+                "channel integer, " +
                 "joined integer NOT NULL, " +
                 "updated integer NOT NULL, " +
                 "PRIMARY KEY (userid))"

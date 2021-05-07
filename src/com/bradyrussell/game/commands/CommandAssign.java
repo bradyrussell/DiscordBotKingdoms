@@ -32,7 +32,7 @@ public class CommandAssign extends Command {
         Session session = DatabaseUtil.getProductionSessionFactory().openSession();
 
         try {
-            Player player = Player.get(session, commandEvent.getAuthor().getIdLong());
+            Player player = Player.get(session, commandEvent.getAuthor().getIdLong(), commandEvent.getChannel().getIdLong());
 
             if (player.kingdom != null) {
                 if(player.kingdom.getArmyCount(session) > 0) {
@@ -80,7 +80,9 @@ public class CommandAssign extends Command {
 
                                             session2.beginTransaction();
 
-                                            Army army = session2.get(Army.class,player.kingdom.armies.get(i - 1).id);
+                                           // Army army = session2.get(Army.class,player.kingdom.armies.get(i - 1).id);
+
+                                            Army army = player.kingdom.armies.get(i - 1);
                                             army.addUnit(session2.get(Unit.class, finalSelectedUnit.id));
 
                                             session2.saveOrUpdate(army);

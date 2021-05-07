@@ -34,7 +34,7 @@ public class CommandKingdom extends Command {
         Session session = DatabaseUtil.getProductionSessionFactory().openSession();
 
         try {
-            Player player = Player.get(session, commandEvent.getAuthor().getIdLong());
+            Player player = Player.get(session, commandEvent.getAuthor().getIdLong(), commandEvent.getChannel().getIdLong());
 
             session.clear();
 

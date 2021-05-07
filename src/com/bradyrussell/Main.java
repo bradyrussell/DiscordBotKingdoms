@@ -46,7 +46,8 @@ public class Main {
                 new CommandAssign(eventWaiter),
                 new CommandUnits(eventWaiter),
                 new CommandTrain(eventWaiter),
-                new CommandDisband(eventWaiter)
+                new CommandDisband(eventWaiter),
+                new CommandScout(eventWaiter)
         ).setOwnerId("374003555478142997").setActivity(activity).build();
 
         JDA jda = JDABuilder.createDefault(args[0]).setActivity(activity).setLargeThreshold(20).addEventListeners(commandClient, eventWaiter).build();

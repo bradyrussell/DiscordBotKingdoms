@@ -1,5 +1,7 @@
 package com.bradyrussell.data.dbobjects;
 
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.MessageChannel;
 import org.hibernate.Session;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -22,21 +24,33 @@ public class Player {
     }
 
     //creates if one does not exist
-    public static Player get(Session session, long userid){
+    public static Player get(Session session, long userid, Long forChannel){
         Player player = session.get(Player.class, userid);
         if(player == null) {
             session.beginTransaction();
 
             player = new Player(userid);
 
+            player.channel = forChannel;
             session.persist(player);
             session.getTransaction().commit();
+        } else {
+            if(forChannel != null && player.channel != forChannel) {
+                player.channel = forChannel;
+                session.beginTransaction();
+                session.saveOrUpdate(player);
+                session.getTransaction().commit();
+            }
         }
         return player;
     }
 
     @Id @Column(name="userid")
     public long userid;
+
+    // if null, dm player
+    @Column(name="channel")
+    public Long channel;
 
     @CreationTimestamp @Column(name="joined")
     public Timestamp joined;
@@ -67,4 +81,5 @@ public class Player {
 
         return session.createQuery(query).getResultList();
     }
+
 }

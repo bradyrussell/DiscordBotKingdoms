@@ -32,27 +32,44 @@ public class CommandAttack extends Command {
         Session session = DatabaseUtil.getProductionSessionFactory().openSession();
 
         try {
-            Player player = Player.get(session, commandEvent.getAuthor().getIdLong());
+            Player player = Player.get(session, commandEvent.getAuthor().getIdLong(), commandEvent.getChannel().getIdLong());
 
             if (player.kingdom != null) {
                 if (!commandEvent.getArgs().isBlank() && commandEvent.getMessage().getMentionedUsers().size() > 0) {
-                    Player playerToAttack = Player.get(session, commandEvent.getMessage().getMentionedUsers().get(0).getIdLong());
+                    Player playerToAttack = null;
 
-                    if(playerToAttack.kingdom != null) {
+                    if(commandEvent.getMessage().getMentionedUsers().get(0).getIdLong() == commandEvent.getJDA().getSelfUser().getIdLong()) {
+                        // attack bot
+                        String[] s = commandEvent.getArgs().split(" ");
+                        Long aiID = null;
+                        try {
+                            aiID = Long.parseLong(s[s.length-1]);
+                        } catch (NumberFormatException ignored){
+
+                        }
+                        if(aiID != null) {
+                            playerToAttack = Player.get(session, aiID, null);
+                        }
+                    } else {
+                        playerToAttack = Player.get(session, commandEvent.getMessage().getMentionedUsers().get(0).getIdLong(), null);
+                    }
+
+                    if(playerToAttack != null && playerToAttack.kingdom != null) {
                         if(true) {
 
+                            Player finalPlayerToAttack = playerToAttack;
                             SelectionDialog.Builder builder = new SelectionDialog.Builder()
                                     .setUsers(commandEvent.getAuthor())
                                     .setText("Attack with which army?")
                                     .setSelectedEnds(">", "<")
                                     .setSelectionConsumer((m, i) -> {
-
+                                        Army army = player.kingdom.armies.get(i - 1);
                                         if(true) {
                                             new ButtonMenu.Builder()
                                                     .setUsers(commandEvent.getAuthor())
                                                     .setChoices(Emojis.CONFIRM, Emojis.CANCEL)
                                                     .setText("Are you sure you want to attack? Your army will remain occupied for 10 minutes.")
-                                                    .setDescription(playerToAttack.kingdom.name)
+                                                    .setDescription("Attack "+ finalPlayerToAttack.kingdom.name+" with "+army.name)
                                                     .setAction(reactionEmote -> {
                                                         if(reactionEmote.getName().equals(Emojis.CONFIRM)) {
                                                             Session session2 = DatabaseUtil.getProductionSessionFactory().openSession();
@@ -65,7 +82,7 @@ public class CommandAttack extends Command {
                                                 session2.getTransaction().commit();*/
                                                             session2.close();
 
-                                                            commandEvent.getMessage().reply("You have sent your army towards "+playerToAttack.kingdom.name+"! A messenger should return shortly!").queue();
+                                                            commandEvent.getMessage().reply("You have sent your army towards "+ finalPlayerToAttack.kingdom.name+"! A messenger should return shortly!").queue();
                                                         } else {
                                                             commandEvent.getMessage().reply("Canceled attack!").queue();
                                                         }

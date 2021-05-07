@@ -1,5 +1,6 @@
 package com.bradyrussell.game;
 
+import com.bradyrussell.data.dbobjects.Kingdom;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Activity;
 import org.hibernate.Session;
@@ -17,5 +18,16 @@ public class ScheduledEvents {
 
     public static void updateAIKingdoms(Session session) {
 
+    }
+
+    public static void scoutingCompleted(Session session, Kingdom kingdom, long scoutUnitId) {
+        boolean bFoundAnything = ThreadLocalRandom.current().nextBoolean();
+
+        if(bFoundAnything) {
+
+        } else {
+            boolean bWasInjured = ThreadLocalRandom.current().nextBoolean();
+
+        }
     }
 }

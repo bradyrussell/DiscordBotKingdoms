@@ -28,7 +28,7 @@ public class CommandCreateArmy extends Command {
         Session session = DatabaseUtil.getProductionSessionFactory().openSession();
 
         try {
-            Player player = Player.get(session, commandEvent.getAuthor().getIdLong());
+            Player player = Player.get(session, commandEvent.getAuthor().getIdLong(), commandEvent.getChannel().getIdLong());
 
             if (player.kingdom != null) {
                 long kingdomArmyCount = player.kingdom.getArmyCount(session);
