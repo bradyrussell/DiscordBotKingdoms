@@ -223,9 +223,9 @@ public class Kingdom {
             building.tick(session, secondsElapsed);
         }
 
-/*        for (Unit unit : units) {
+        for (Unit unit : units) {
             unit.tick(session, secondsElapsed);
-        }*/
+        }
 
         System.out.println(">>>>>>>> Ticked with "+secondsElapsed+" elapsed.");
 

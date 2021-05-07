@@ -23,11 +23,11 @@ import java.util.concurrent.TimeUnit;
 
 public class Main {
     private static final Logger logger = LogManager.getLogger(Main.class);
-
+    public static ScheduledExecutorService threadPool;
     public static void main(String[] args) throws InterruptedException, LoginException {
         BasicConfigurator.configure();
 
-        ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(8, r -> new Thread(r, "KingdomThreadpoolThead"));
+        threadPool = Executors.newScheduledThreadPool(8, r -> new Thread(r, "KingdomThreadpoolThead"));
 
         EventWaiter eventWaiter = new EventWaiter();
 

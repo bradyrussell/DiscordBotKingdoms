@@ -67,7 +67,7 @@ public class TestDatabase {
         try{
             Session session = DatabaseUtil.getTestSessionFactory().openSession();
 
-            Player player = Player.get(session, 1234);
+            Player player = Player.get(session, 1234, null);
 
             assertEquals(player.userid, 1234);
 
@@ -83,7 +83,7 @@ public class TestDatabase {
             Session session = DatabaseUtil.getTestSessionFactory().openSession();
 
             int userid = Math.abs(ThreadLocalRandom.current().nextInt());
-            Player player = Player.get(session, userid);
+            Player player = Player.get(session, userid, null);
 
             session.persist(player);
 
@@ -101,7 +101,7 @@ public class TestDatabase {
             Session session = DatabaseUtil.getTestSessionFactory().openSession();
             session.beginTransaction();
 
-            Kingdom kingdom = new Kingdom(Player.get(session, 1234),"Testland");
+            Kingdom kingdom = new Kingdom(Player.get(session, 1234, null),"Testland");
 
             session.persist(kingdom);
             session.getTransaction().commit();
@@ -159,7 +159,7 @@ public class TestDatabase {
             session.beginTransaction();
 
 
-            Player player = Player.get(session, 1234);
+            Player player = Player.get(session, 1234, null);
 
             Army army = new Army(player.kingdom, "MyArmy");
 
@@ -181,7 +181,7 @@ public class TestDatabase {
             session.beginTransaction();
 
 
-            Player player = Player.get(session, 1234);
+            Player player = Player.get(session, 1234, null);
 
             Unit unit = new Unit(player.kingdom, UnitTypes.Archer);
 
@@ -202,7 +202,7 @@ public class TestDatabase {
         try{
             Session session = DatabaseUtil.getTestSessionFactory().openSession();
 
-            Player player = Player.get(session, 1234);
+            Player player = Player.get(session, 1234, null);
 
             assertFalse(player.kingdom.units.get(0).isReady());
 
@@ -217,7 +217,7 @@ public class TestDatabase {
         try{
             Session session = DatabaseUtil.getTestSessionFactory().openSession();
 
-            Player player = Player.get(session, 1234);
+            Player player = Player.get(session, 1234, null);
 
             assertNotNull(player.kingdom);
             assertNotNull(player.kingdom.armies);
@@ -241,7 +241,7 @@ public class TestDatabase {
         try{
             Session session = DatabaseUtil.getTestSessionFactory().openSession();
 
-            Player player = Player.get(session, 1234);
+            Player player = Player.get(session, 1234, null);
 
 
 

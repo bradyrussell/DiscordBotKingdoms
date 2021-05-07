@@ -1,10 +1,12 @@
 package com.bradyrussell.game.commands;
 
+import com.bradyrussell.Main;
 import com.bradyrussell.data.DatabaseUtil;
 import com.bradyrussell.data.Emojis;
 import com.bradyrussell.data.GoldUtil;
 import com.bradyrussell.data.UnitTypes;
 import com.bradyrussell.data.dbobjects.*;
+import com.bradyrussell.game.ScheduledEvents;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
@@ -33,79 +35,63 @@ public class CommandScout extends Command {
             Player player = Player.get(session, commandEvent.getAuthor().getIdLong(), commandEvent.getChannel().getIdLong());
 
             if (player.kingdom != null) {
-                if(true) {
-                    if (true) {
-                        Integer specifiedLevel = null;
-                        if (!commandEvent.getArgs().isBlank()) {
-                            String[] split = commandEvent.getArgs().split(" ");
+                Integer specifiedLevel = null;
+                if (!commandEvent.getArgs().isBlank()) {
+                    String[] split = commandEvent.getArgs().split(" ");
 
-                            if (split[0].equalsIgnoreCase("level")) {
-                                try {
-                                    specifiedLevel = Integer.parseInt(split[1]);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
+                    if (split[0].equalsIgnoreCase("level")) {
+                        try {
+                            specifiedLevel = Integer.parseInt(split[1]);
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-
-                        if(true) {
-                            List<Unit> potentialUnits = player.kingdom.getUnitsByType(session, UnitTypes.Scout, specifiedLevel == null ? 1 : specifiedLevel);
-
-                            Unit selectedUnit = null;
-
-                            for (Unit potentialUnit : potentialUnits) {
-                                if(potentialUnit.isReady() && potentialUnit.isTrained() && !potentialUnit.isInArmy()) {
-                                    selectedUnit = potentialUnit;
-                                    break;
-                                }
-                            }
-
-                            if(selectedUnit != null) {
-                                Unit finalSelectedUnit = selectedUnit;
-
-                                new ButtonMenu.Builder()
-                                        .setUsers(commandEvent.getAuthor())
-                                        .setChoices(Emojis.CONFIRM,Emojis.CANCEL)
-                                        .setText("Are you sure you want to send this scout?")
-                                        .setDescription("Level "+finalSelectedUnit.level+" "+finalSelectedUnit.type.DisplayName)
-                                        .setAction(reactionEmote -> {
-                                            if(reactionEmote.getName().equals(Emojis.CONFIRM)) {
-                                                Session session2 = DatabaseUtil.getProductionSessionFactory().openSession();
-                                                session2.beginTransaction();
-
-                                                finalSelectedUnit.setOccupiedFor(300);
-                                                session2.saveOrUpdate(finalSelectedUnit);
-                                                session2.getTransaction().commit();
-                                                session2.close();
-
-                                                commandEvent.getMessage().reply("Your kingdom has been created!").queue();
-                                            } else {
-                                                commandEvent.getMessage().reply("Canceled kingdom creation!").queue();
-                                            }
-                                        })
-                                        .setFinalAction(message -> {
-                                            message.clearReactions().queue();
-                                        }).setEventWaiter(eventWaiter).setTimeout(15, TimeUnit.SECONDS).build().display(commandEvent.getChannel());
-
-                            } else {
-                                commandEvent.getMessage().addReaction(Emojis.CANCEL).queue();
-                                commandEvent.reply("You do not have any "+(specifiedLevel == null ? "" :"level "+specifiedLevel+" ")+"scouts ready!");
-                            }
-
-                        } else {
-                            commandEvent.getMessage().addReaction(Emojis.CANCEL).queue();
-                            commandEvent.reply("Unknown unit type!");
-                        }
-
-
-                    } else {
-                        commandEvent.getMessage().addReaction(Emojis.CANCEL).queue();
-                        commandEvent.reply("Please specify a unit to assign: assign [level N] <type> !");
                     }
+                }
+
+                List<Unit> potentialUnits = player.kingdom.getUnitsByType(session, UnitTypes.Scout, specifiedLevel == null ? 1 : specifiedLevel);
+
+                Unit selectedUnit = null;
+
+                for (Unit potentialUnit : potentialUnits) {
+                    if (potentialUnit.isReady() && potentialUnit.isTrained() && !potentialUnit.isInArmy()) {
+                        selectedUnit = potentialUnit;
+                        break;
+                    }
+                }
+
+                if (selectedUnit != null) {
+                    Unit finalSelectedUnit = selectedUnit;
+
+                    new ButtonMenu.Builder()
+                            .setUsers(commandEvent.getAuthor())
+                            .setChoices(Emojis.CONFIRM, Emojis.CANCEL)
+                            .setText("Are you sure you want to send this scout?")
+                            .setDescription("Level " + finalSelectedUnit.level + " " + finalSelectedUnit.type.DisplayName)
+                            .setAction(reactionEmote -> {
+                                if (reactionEmote.getName().equals(Emojis.CONFIRM)) {
+                                    Session session2 = DatabaseUtil.getProductionSessionFactory().openSession();
+                                    session2.beginTransaction();
+
+                                    finalSelectedUnit.setOccupiedFor(300);
+                                    session2.saveOrUpdate(finalSelectedUnit);
+                                    session2.getTransaction().commit();
+                                    session2.close();
+
+                                    commandEvent.getMessage().reply("Your scout has begun their mission!").queue();
+                                } else {
+                                    commandEvent.getMessage().reply("Canceled scouting mission!").queue();
+                                }
+                            })
+                            .setFinalAction(message -> {
+                                message.clearReactions().queue();
+                            }).setEventWaiter(eventWaiter).setTimeout(15, TimeUnit.SECONDS).build().display(commandEvent.getChannel());
+
                 } else {
                     commandEvent.getMessage().addReaction(Emojis.CANCEL).queue();
-                    commandEvent.reply("Please create an army first: createarmy <name> !");
+                    commandEvent.reply("You do not have any " + (specifiedLevel == null ? "" : "level " + specifiedLevel + " ") + "scouts ready!");
                 }
+
+
             } else {
                 commandEvent.getMessage().addReaction(Emojis.CANCEL).queue();
                 commandEvent.reply("Sorry, but you must have a kingdom to scout!");

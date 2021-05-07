@@ -73,7 +73,13 @@ public class Unit {
     }
 
     public void tick(Session session, long elapsedSeconds) {
-
+        if(type.equals(UnitTypes.Scout) && this.isReady() && this.kingdom.lastTick.before(this.ready)) {
+            //scouting completed
+        }
         //session.saveOrUpdate(this);
+    }
+
+    public void damage(int amount) {
+
     }
 }

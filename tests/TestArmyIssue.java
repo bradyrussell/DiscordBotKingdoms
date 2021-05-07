@@ -23,7 +23,7 @@ public class TestArmyIssue {
         Session session = DatabaseUtil.getProductionSessionFactory().openSession();
 
         try {
-            Player player = Player.get(session, 374003555478142997L);
+            Player player = Player.get(session, 374003555478142997L, null);
 
             assertNotNull(player);
             assertNotNull(player.kingdom);

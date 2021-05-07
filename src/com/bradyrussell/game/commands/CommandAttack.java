@@ -55,7 +55,7 @@ public class CommandAttack extends Command {
                     }
 
                     if(playerToAttack != null && playerToAttack.kingdom != null) {
-                        if(true) {
+                        if(player.kingdom.getArmyCount(session) > 0) {
 
                             Player finalPlayerToAttack = playerToAttack;
                             SelectionDialog.Builder builder = new SelectionDialog.Builder()
